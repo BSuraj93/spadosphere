@@ -1,26 +1,77 @@
-@import "tailwindcss";
+/* src/app/globals.css */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* 1. Gold Text Gradient */
+.gold-text-gradient {
+  background: linear-gradient(135deg, #D4AF37 0%, #FFF3B0 50%, #D4AF37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* 2. Gold CTA Button with Glitter Ripple */
+.gold-btn-ripple {
+  background: linear-gradient(135deg, #D4AF37 0%, #F5E396 50%, #D4AF37 100%);
+  background-size: 200% auto;
+  color: #000 !important;
+  position: relative;
+  overflow: hidden;
+  transition: 0.3s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.gold-btn-ripple::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 25%);
+  opacity: 0;
+  pointer-events: none;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.gold-btn-ripple:hover::after {
+  animation: gold-glitter 1.2s infinite;
+  opacity: 1;
+}
+
+@keyframes gold-glitter {
+  0% { transform: scale(0); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* 3. Outlined Button Hover */
+.outlined-btn-hover:hover {
+  border-color: #D4AF37 !important;
+  background: rgba(212, 175, 55, 0.05) !important;
+  color: #D4AF37 !important;
+}
+
+/* 4. Typing Animation & Sparkle */
+.typing-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.typing-effect {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid #D4AF37;
+  width: 0;
+  animation: typing 3s steps(30, end) forwards, blink 0.75s step-end infinite;
+}
+
+@keyframes typing { from { width: 0 } to { width: 100% } }
+@keyframes blink { 50% { border-color: transparent } }
+
+.sparkle-end {
+  position: absolute;
+  right: -25px;
+  top: 0;
+  opacity: 0;
+  animation: sparkle-pop 0.5s ease forwards;
+  animation-delay: 3s;
+}
+
+@keyframes sparkle-pop {
+  to { opacity: 1; transform: scale(1.5); }
 }
