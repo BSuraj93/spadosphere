@@ -1,31 +1,89 @@
+// src/components/Footer.tsx
+import Link from "next/link";
+
 export default function Footer() {
   return (
-    <footer style={{ backgroundColor: '#0D0D0E', padding: '100px 5% 40px 5%', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '60px', marginBottom: '100px' }}>
-        <div>
-          <span style={fLabel}>Navigation</span>
-          <a href="/" style={fLink}>Home</a>
-          <a href="/method" style={fLink}>The Method</a>
+    <footer className="footer">
+      <div className="footer-inner">
+        <div className="footer-brand-block">
+          <div className="footer-logo-row">
+            <img src="/logo.svg" alt="Spadosphere" className="footer-logo" />
+
+            <div className="footer-wordmark">Spadosphere</div>
+          </div>
+          <div className="footer-tagline">Strategy · Product Design.</div>
+          <div className="footer-microcopy">
+            Built in the Spadosphere. 2026.
+          </div>
         </div>
-        <div>
-          <span style={fLabel}>Social</span>
-          <a href="#" style={fLink}>LinkedIn</a>
-        </div>
-        <div>
-          <span style={fLabel}>Contact</span>
-          <p style={{ color: '#fff' }}>hello@spadosphere.com</p>
+
+        <div className="footer-grid">
+          <div>
+            <div className="footer-column-title">Navigate</div>
+            <Link href="/" className="footer-link">
+              Home
+            </Link>
+            <Link href="/method" className="footer-link">
+              Methodology
+            </Link>
+            <Link href="/about" className="footer-link">
+              About
+            </Link>
+            <Link href="/blog" className="footer-link">
+              Blog
+            </Link>
+            <Link href="/contact" className="footer-link">
+              Contact Us
+            </Link>
+          </div>
+
+          <div>
+            <div className="footer-column-title">Social</div>
+            <a
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+              className="footer-link"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+              className="footer-link"
+            >
+              X (Twitter)
+            </a>
+            <a
+              href="#"
+              target="_blank"
+              rel="noreferrer"
+              className="footer-link"
+            >
+              Facebook
+            </a>
+          </div>
+
+          <div>
+            <div className="footer-column-title">Legal</div>
+            <a href="#" className="footer-link">
+              Terms &amp; Conditions
+            </a>
+            <a href="#" className="footer-link">
+              Cookies
+            </a>
+            <a href="#" className="footer-link">
+              Privacy Policy
+            </a>
+          </div>
         </div>
       </div>
-      
-      {/* Expanded Wordmark */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '40px' }}>
-        <h1 style={{ fontSize: 'clamp(40px, 18vw, 250px)', fontWeight: 900, color: 'rgba(255,255,255,0.03)', textAlign: 'center', margin: 0, letterSpacing: '-0.05em' }}>
-          SPADOSPHERE
-        </h1>
+
+      <div className="footer-bottom">
+        <span>© {new Date().getFullYear()} Spadosphere</span>
+        <span>Atmosphere for early-stage founders</span>
       </div>
     </footer>
   );
 }
-
-const fLabel = { color: '#D4AF37', fontSize: '12px', fontWeight: '800', display: 'block', marginBottom: '20px' };
-const fLink = { color: '#A1A1AA', display: 'block', textDecoration: 'none', marginBottom: '12px' };
