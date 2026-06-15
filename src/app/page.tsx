@@ -1,5 +1,6 @@
 // src/app/page.tsx
 import Link from "next/link";
+import BrevoChatWidget from "@/components/BrevoChatWidget";
 
 export default function HomePage() {
   return (
@@ -142,6 +143,10 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      <>
+  {/* your existing page content */}
+  <BrevoChatWidget />
+</>
     </div>
   );
 }
