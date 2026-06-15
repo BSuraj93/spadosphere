@@ -31,7 +31,7 @@ export default function AboutPage() {
           </div>
           <div>
             <p>
-              Spadosphere didn&apos;t start in a boardroom—it started with a
+              Spadosphere didn&apos;t start in a boardroom. It started with a
               realization. Startups often fail not because the idea is bad,
               but because the execution is fragmented.
             </p>
@@ -50,20 +50,20 @@ export default function AboutPage() {
       </section>
 
       {/* Duo profiles */}
-<section className="section">
+{/*<section className="section">
   <div className="section-label">Meet the Duo</div>
   <div className="duo-grid">
     <div className="card duo-card">
       <img src="/strategist-photo.jpg" alt="The Strategist" className="person-image" />
       <div className="duo-content">
         <h3>The Strategist</h3>
-        <p className="section-label">Your Name · Strategy &amp; Product Management</p>
+        <p className="section-label">SURAJ B · Strategy &amp; Product Management</p>
         <p>
           <strong>The Vibe.</strong> The North Star.
         </p>
         <p>
           With a background in navigating the complex waters of product
-          management and GTM strategy, Your Name focuses on the why and
+          management and GTM strategy, Suraj focuses on the why and
           the how.
         </p>
         <p>
@@ -77,13 +77,12 @@ export default function AboutPage() {
       <img src="/designer-photo.jpg" alt="The Designer" className="person-image" />
       <div className="duo-content">
         <h3>The Designer</h3>
-        <p className="section-label">Sister&apos;s Name · Product Design &amp; UX</p>
+        <p className="section-label">ANJANA B · Product Design &amp; UX</p>
         <p>
           <strong>The Vibe.</strong> The Soul of the Product.
         </p>
         <p>
-          A master of visual storytelling and user experience, Sister&apos;s
-          Name turns abstract strategy into lovable reality.
+          A master of visual storytelling and user experience, Anjana turns abstract strategy into lovable reality.
         </p>
         <p>
           She believes that design isn&apos;t just how it looks, but how
@@ -92,7 +91,7 @@ export default function AboutPage() {
       </div>
     </div>
   </div>
-</section>
+</section> */}
 
 
       {/* Founders Office philosophy */}
@@ -113,7 +112,7 @@ export default function AboutPage() {
             </p>
             <p>
               We manage the timelines, we filter the noise, and we ensure that
-              when you hit the market, you aren&apos;t just launching—you&apos;re
+              when you hit the market, you aren&apos;t just launching, you&apos;re
               landing.
             </p>
           </div>
@@ -159,7 +158,7 @@ export default function AboutPage() {
           <h2>Let&apos;s add some Spad to your startup.</h2>
           <div className="button-row">
             <Link href="/contact" className="btn btn-primary">
-              Meet the Team
+              Book Your Strategy Audit
             </Link>
           </div>
         </div>

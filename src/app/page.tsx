@@ -10,8 +10,7 @@ export default function HomePage() {
           <div className="section-label">The Breathable Startup Launchpad</div>
           <h1>From Zero to <span className="hero-typing">Minimum Lovable Product.</span></h1>
           <p>
-            Founders bring the vision. We provide the Spad—the Strategy and
-            Product Design atmosphere needed to hit the market with impact.
+            Founders bring the vision. We provide the Spad - the Strategy, Product and Design atmosphere needed to hit the market with impact.
           </p>
           <p>
             We are your Fractional Chief of Staff, turning founder-anxiety
@@ -43,9 +42,8 @@ export default function HomePage() {
           <div className="card">
             <h3>The Spad Solution</h3>
             <p>
-              We remove the friction. By integrating Strategy (Sp) and Product
-              Design (ad), we create an Atmosphere where your product doesn&apos;t
-              just function—it thrives.
+              We remove the friction. By integrating Strategy (S), Product (P) and Design (D), we create an Atmosphere where your product doesn&apos;t
+              just function - it thrives.
             </p>
           </div>
         </div>
@@ -63,7 +61,7 @@ export default function HomePage() {
               the roadmap.
             </p>
             <p>
-              We don&apos;t just build features—we build a business case.
+              We don&apos;t just build features. We build a business case.
             </p>
           </div>
           <div className="card">
@@ -76,7 +74,7 @@ export default function HomePage() {
             <p>We move past Viable and straight to Lovable.</p>
           </div>
           <div className="card">
-            <h3>Founders Office · The Hands</h3>
+            <h3>Execution · The Hands</h3>
             <p className="section-label">Fractional Chief of Staff.</p>
             <p>
               Consider us your tactical partners. We manage the timelines, the
@@ -97,7 +95,7 @@ export default function HomePage() {
           <div>
             <p>
               In today&apos;s market, users don&apos;t just want a product that
-              works—they want a product that resonates.
+              works. They want a product that resonates.
             </p>
             <p>
               The Spadosphere is where your technical requirements meet human
@@ -121,7 +119,7 @@ export default function HomePage() {
               strategy and high-fidelity Product Design.
             </p>
             <p>
-              No hand-off friction. No lost-in-translation. Just a seamless
+              In this journey with us, there is no hand-off friction, no lost-in-translation. Just a seamless
               path to GTM.
             </p>
           </div>

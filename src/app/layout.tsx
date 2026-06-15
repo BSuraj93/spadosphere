@@ -1,9 +1,11 @@
 // src/app/layout.tsx
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
 import { Quicksand } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import CookieBanner from "@/components/CookieBanner";
 
 const quicksand = Quicksand({
   subsets: ["latin"],
@@ -29,6 +31,7 @@ export default function RootLayout({
           <Navbar />
           <main className="app-main">{children}</main>
           <Footer />
+          <CookieBanner />
         </div>
       </body>
     </html>

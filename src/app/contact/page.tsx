@@ -13,7 +13,7 @@ export default function ContactPage() {
               your product gets the Spad focus it deserves.
             </p>
             <p>
-              Tell us where you are, and let&apos;s see if we&apos;re the right
+              Tell us your idea and your current stage, and let&apos;s see if we&apos;re the right
               atmosphere for your launch.
             </p>
           </div>
@@ -28,8 +28,7 @@ export default function ContactPage() {
             <h2>Start with a founder-first intake.</h2>
             <p>
               Instead of just Name/Email, we focus on the substance of your
-              challenge. Since we don&apos;t have form logic here, you can
-              reach us directly.
+              challenge.
             </p>
             <p>
               Email us at{" "}
@@ -40,14 +39,14 @@ export default function ContactPage() {
             </p>
             <p>
               You can also mention your current stage, your biggest bottleneck,
-              and what &quot;Minimum Lovable&quot; looks like for you.
+              and what &quot;Minimum Lovable&quot; looks like for you. Feel free to include links to any helpful documents as well.
             </p>
           </div>
           <div className="card">
             <h3>Where we are based</h3>
             <p>
               Spadosphere<br />
-              [Your City, Country]<br />
+              [Chennai, India]<br />
             </p>
             <p className="section-label">
               We work with founders globally, remotely.
@@ -66,18 +65,18 @@ export default function ContactPage() {
           </p>
           <div className="button-row">
             <a
-              href="https://calendly.com/your-calendly-link"
+              href="https://topmate.io/suraj_b93/"
               target="_blank"
               rel="noreferrer"
               className="btn btn-primary"
             >
-              Book a Calendly Slot
+              Book a Discovery Call
             </a>
           </div>
         </div>
       </section>
 
-      {/* Direct line */}
+      {/* Direct line
       <section className="section">
         <div className="section-label">Alternative Contact</div>
         <div className="grid-2">
@@ -90,7 +89,7 @@ export default function ContactPage() {
           </div>
           <div className="card">
             {/* Replace with your real links */}
-            <p>
+            {/*<p>
               <a
                 href="#"
                 target="_blank"
@@ -112,7 +111,7 @@ export default function ContactPage() {
             </p>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* What happens next */}
       <section className="section">
@@ -133,7 +132,7 @@ export default function ContactPage() {
             <div>
               <h3>The Intro Call</h3>
               <p>
-                A 20-minute, no-pitch session to dive deeper into your
+                A 15-minute, no-pitch session to dive deeper into your
                 roadmap.
               </p>
             </div>
@@ -166,7 +165,7 @@ export default function ContactPage() {
           <div className="faq-item">
             <h3>Are you an agency?</h3>
             <p>
-              No. We are a Founder&apos;s Office. We don&apos;t just do tasks—we
+              No. We are a Founder&apos;s Office. We don&apos;t just do tasks, we
               own outcomes.
             </p>
           </div>

@@ -14,8 +14,8 @@ export default function MethodPage() {
       pressure-test it.
     </p>
     <p>
-      The Spad Method is a symbiotic loop of Strategy (Sp) and Product
-      Design (ad) designed to eliminate the &quot;viscosity&quot; that kills
+      The Spad Method is a symbiotic loop of Strategy (S), Product (P)
+      and Design (D) designed to eliminate the &quot;viscosity&quot; that kills
       early-stage startups.
     </p>
   </div>
@@ -32,7 +32,7 @@ export default function MethodPage() {
             <div className="step-label">Step 01</div>
             <div className="step-title">Strategic Deconstruction (The &apos;Sp&apos;)</div>
             <div className="step-meta">
-              Strategy isn&apos;t a PDF—it&apos;s a Compass.
+              Strategy isn&apos;t a PDF. It&apos;s a Compass.
             </div>
             <p>
               We start by stripping your idea down to its core value
@@ -165,7 +165,7 @@ export default function MethodPage() {
           </p>
           <div className="button-row">
             <Link href="/contact" className="btn btn-primary">
-              Request a Method Deep-Dive
+              Book Your Strategy Audit
             </Link>
           </div>
         </div>

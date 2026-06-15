@@ -11,7 +11,7 @@ export default function Footer() {
 
             <div className="footer-wordmark">Spadosphere</div>
           </div>
-          <div className="footer-tagline">Strategy · Product Design.</div>
+          <div className="footer-tagline">Strategy · Product · Design.</div>
           <div className="footer-microcopy">
             Built in the Spadosphere. 2026.
           </div>
@@ -40,14 +40,14 @@ export default function Footer() {
           <div>
             <div className="footer-column-title">Social</div>
             <a
-              href="#"
+              href="https://www.linkedin.com/company/spadosphere"
               target="_blank"
               rel="noreferrer"
               className="footer-link"
             >
               LinkedIn
             </a>
-            <a
+            {/*<a
               href="#"
               target="_blank"
               rel="noreferrer"
@@ -62,26 +62,26 @@ export default function Footer() {
               className="footer-link"
             >
               Facebook
-            </a>
+            </a> */}
           </div>
 
           <div>
             <div className="footer-column-title">Legal</div>
-            <a href="#" className="footer-link">
+            <Link href="/terms" className="footer-link">
               Terms &amp; Conditions
-            </a>
-            <a href="#" className="footer-link">
+            </Link>
+            <Link href="/cookies" className="footer-link">
               Cookies
-            </a>
-            <a href="#" className="footer-link">
+            </Link>
+            <Link href="/privacy" className="footer-link">
               Privacy Policy
-            </a>
+            </Link>
           </div>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} Spadosphere</span>
+        <span>© {new Date().getFullYear()} Spadosphere India Private Limited</span>
         <span>Atmosphere for early-stage founders</span>
       </div>
     </footer>
