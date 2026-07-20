@@ -29,6 +29,9 @@ export default function Footer() {
             <Link href="/about" className="footer-link">
               About
             </Link>
+            <Link href="/retreats" className="footer-link">
+              Explore Retreats
+            </Link>
             <Link href="/blog" className="footer-link">
               Blog
             </Link>

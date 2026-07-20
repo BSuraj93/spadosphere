@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/method", label: "Methodology" },
   { href: "/about", label: "About" },
+  { href: "/retreats", label: "Explore Retreats" },
 ];
 
 const resourceLinks = [
@@ -50,6 +51,7 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
           <div className="nav-dropdown">
             <button
               type="button"
@@ -60,6 +62,7 @@ export default function Navbar() {
               Resources
               <span className="nav-dropdown-chevron" aria-hidden="true" />
             </button>
+
             <div className="nav-dropdown-menu">
               {resourceLinks.map((link) => (
                 <Link
@@ -73,6 +76,7 @@ export default function Navbar() {
               ))}
             </div>
           </div>
+
           <Link href="/contact" className="nav-cta btn btn-primary">
             Contact Us
           </Link>
@@ -81,10 +85,12 @@ export default function Navbar() {
         <button
           className="nav-toggle"
           aria-label="Toggle navigation"
+          aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
-          <div className="nav-toggle-bar" />
-          <div className="nav-toggle-bar" />
+          <span className="nav-toggle-bar" />
+          <span className="nav-toggle-bar" />
+          <span className="nav-toggle-bar" />
         </button>
       </div>
 
@@ -101,24 +107,23 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <div className="nav-mobile-group">
-              <div className="nav-mobile-group-label">Resources</div>
+
+            <div className="nav-mobile-group-label">Resources</div>
+
+            <div className="nav-mobile-subgroup">
               {resourceLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="nav-mobile-link nav-mobile-sublink"
+                  className="nav-mobile-link"
                   onClick={closeMobile}
                 >
                   {link.label}
                 </Link>
               ))}
             </div>
-            <Link
-              href="/contact"
-              className="nav-mobile-link"
-              onClick={closeMobile}
-            >
+
+            <Link href="/contact" className="nav-mobile-link" onClick={closeMobile}>
               Contact Us
             </Link>
           </div>

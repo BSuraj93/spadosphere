@@ -3,169 +3,185 @@ import Link from "next/link";
 
 export default function MethodPage() {
   return (
-    <div>
-      {/* Hero - IMPROVED ALIGNMENT */}
-<section className="hero section">
-  <div className="hero-content">
-    <div className="section-label">The Spad Method</div>
-    <h1>We don&apos;t do <span className="method-hero-highlight">&quot;Random Acts of Building.&quot;</span></h1>
-    <p>
-      Most agencies take an order and build it. We take a vision and
-      pressure-test it.
-    </p>
-    <p>
-      The Spad Method is a symbiotic loop of Strategy (S), Product (P)
-      and Design (D) designed to eliminate the &quot;viscosity&quot; that kills
-      early-stage startups.
-    </p>
-  </div>
-</section>
+    <div className="method-page">
+      <section className="hero section method-hero">
+        <div className="hero-content">
+          <div className="section-label">The Spad Method</div>
+          <h1>
+            We don&apos;t do{" "}
+            <span className="method-hero-highlight">
+              &quot;Random Acts of Building.&quot;
+            </span>
+          </h1>
+          <p>
+            Most people jump from idea to execution without enough clarity. We
+            believe better outcomes begin with better thinking, better
+            experience, and a more intentional path forward.
+          </p>
+          <p>
+            The Spad Method is a living loop of Strategy, Product, and Design
+            that helps ideas move through uncertainty and toward a Minimum
+            Lovable Product with more clarity, resonance, and momentum.
+          </p>
+        </div>
+      </section>
 
-
-      {/* Atmosphere loop */}
       <section className="section">
         <div className="section-label">The Atmosphere Loop</div>
-        <h2>A 3-step cycle for founders who want rigor, not random.</h2>
+        <h2>A 3-step method for people who want clarity, not chaos.</h2>
         <div className="stepper">
-          {/* Step 1 */}
           <div className="step-card">
             <div className="step-label">Step 01</div>
-            <div className="step-title">Strategic Deconstruction (The &apos;Sp&apos;)</div>
+            <div className="step-title">Strategic Deconstruction (The “S”)</div>
             <div className="step-meta">
-              Strategy isn&apos;t a PDF. It&apos;s a Compass.
+              Strategy isn&apos;t a PDF. It&apos;s a compass.
             </div>
             <p>
-              We start by stripping your idea down to its core value
-              proposition.
+              We begin by stripping the idea back to its essential value,
+              direction, and reason to exist. Before anything gets built, we
+              create space for sharper questions, stronger framing, and clearer
+              choices.
             </p>
             <ul>
               <li>
-                <strong>The GTM Audit.</strong> Who are we fighting? Why do we
-                win?
+                <strong>Clarity Audit.</strong> What is the real idea here, who
+                is it for, and why should it matter?
               </li>
               <li>
-                <strong>Roadmap Definition.</strong> What is the 20% of the
-                product that will provide 80% of the value?
+                <strong>Direction Mapping.</strong> What is the smallest,
+                smartest path toward something meaningful and testable?
               </li>
             </ul>
             <p className="step-outcome">
-              <strong>Outcome.</strong> A lean, mean strategic blueprint that
-              ensures we aren&apos;t building a product nobody wants.
+              <strong>Outcome.</strong> A focused strategic foundation that
+              prevents wasted motion and makes the next move more intentional.
             </p>
           </div>
 
-          {/* Step 2 */}
           <div className="step-card">
             <div className="step-label">Step 02</div>
-            <div className="step-title">High-Fidelity Craft (The &apos;ad&apos;)</div>
+            <div className="step-title">High-Fidelity Craft (The “P” + “D”)</div>
             <div className="step-meta">
-              Design is the first thing your users &quot;feel.&quot;
+              Design is not decoration. It is how meaning takes form.
             </div>
             <p>
-              Led by our Head of Design, we translate the strategy into a visual
-              language that resonates.
+              Once the direction is clear, we translate it into product and
+              design experiences that people can feel, understand, and respond
+              to. This is where clarity becomes form, and form begins to create
+              connection.
             </p>
             <ul>
               <li>
-                <strong>The MLP Identity.</strong> Moving beyond a &quot;Functional&quot;
-                MVP to a &quot;Lovable&quot; Product.
+                <strong>MLP Identity.</strong> Moving beyond “functional enough”
+                toward something people can actually remember, trust, and talk
+                about.
               </li>
               <li>
-                <strong>UX Orchestration.</strong> Mapping every click to a
-                user&apos;s emotional &quot;win.&quot;
+                <strong>Experience Orchestration.</strong> Shaping the flow,
+                interaction, and emotional rhythm of the product or idea in
+                motion.
               </li>
             </ul>
             <p className="step-outcome">
-              <strong>Outcome.</strong> A high-fidelity, interactive prototype
-              or build that looks like a Series B product on a Pre-Seed budget.
+              <strong>Outcome.</strong> A clearer, more resonant product
+              experience that feels intentional, differentiated, and ready to be
+              tested in the real world.
             </p>
           </div>
 
-          {/* Step 3 */}
           <div className="step-card">
             <div className="step-label">Step 03</div>
-            <div className="step-title">The Chief of Staff Integration (The Atmosphere)</div>
-            <div className="step-meta">We close the gap between &quot;Doing&quot; and &quot;Leading.&quot;</div>
+            <div className="step-title">Atmosphere Integration (The Movement)</div>
+            <div className="step-meta">
+              This is where clarity becomes momentum.
+            </div>
             <p>
-              This is where we act as your Founder&apos;s Office. We don&apos;t
-              just hand over files and wish you luck.
+              Ideas do not move forward on insight alone. They move through
+              application, reflection, exposure, accountability, and the right
+              conversations. This is where the Spadosphere becomes more than a
+              method and starts feeling like an environment.
             </p>
             <ul>
               <li>
-                <strong>The Viscosity Filter.</strong> We manage the project
-                timelines, the technical trade-offs, and the launch
-                preparation.
+                <strong>Applied Momentum.</strong> We help turn insight into
+                action through structured experiences, practical movement, and
+                selective support where needed.
               </li>
               <li>
-                <strong>Founder Focus.</strong> We handle the &quot;how&quot; so you can
-                focus on fundraising, hiring, and the &quot;why.&quot;
+                <strong>Networked Growth.</strong> Learning deepens when people
+                meet the right questions, perspectives, and collaborators at the
+                right time.
               </li>
             </ul>
             <p className="step-outcome">
-              <strong>Outcome.</strong> A smooth, controlled GTM launch.
+              <strong>Outcome.</strong> A more grounded, connected, and
+              forward-moving path from idea to Minimum Lovable Product.
             </p>
           </div>
         </div>
       </section>
 
-      {/* MLP Manifesto - BOXED LAYOUT */}
       <section className="section">
         <div className="section-label">The MLP Manifesto</div>
         <h2>Why we build MLPs, not just MVPs.</h2>
         <div className="manifesto-grid">
           <div className="card manifesto-card manifesto-trap">
-            <h3>The &quot;Viable&quot; Trap</h3>
+            <h3>The “Viable” Trap</h3>
             <p>
-              In 2026, &quot;Viable&quot; is the floor. It&apos;s the bare
-              minimum. It doesn&apos;t get you noticed, and it doesn&apos;t get you loved.
+              “Viable” is the floor. It may get something out into the world,
+              but it rarely creates trust, memory, or emotional pull.
             </p>
           </div>
           <div className="card manifesto-card manifesto-advantage">
-            <h3>The &quot;Lovable&quot; Advantage</h3>
+            <h3>The “Lovable” Advantage</h3>
             <p>
-              A Minimum Lovable Product focuses on the emotional hook. It creates advocates, not just users.
+              A Minimum Lovable Product goes beyond utility. It creates
+              connection, invites curiosity, and gives people a reason to come
+              closer.
             </p>
             <p>
-              At Spadosphere, we build products that people actually want to
-              tell their friends about.
+              At Spadosphere, we care about that same shift in the learning
+              journey too: not just consuming information, but experiencing
+              something memorable enough to change how you think and build.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Duo dynamic */}
       <section className="section">
         <div className="section-label">The Duo Dynamic</div>
         <div className="grid-2">
           <div>
-            <h2>Why the &quot;Sp&quot; and the &quot;ad&quot; live under one roof.</h2>
+            <h2>Why strategy and design live under one roof.</h2>
           </div>
           <div>
             <p>
-              Usually, you hire a strategist, and then you have to explain that
-              strategy to a designer. Things get lost. Friction happens.
+              Usually, thinking and making happen in separate rooms. Strategy
+              gets discussed in one place, design gets interpreted in another,
+              and the original energy gets diluted in between.
             </p>
             <p>
-              In the Spadosphere, the strategy and the design are born at the
-              same table. It&apos;s a seamless transition from{" "}
-              <em>&quot;What should we do?&quot;</em> to <em>&quot;Look how beautiful this is.&quot;</em>
+              In the Spadosphere, strategy and design are shaped together, then
+              expanded through learning, application, and connection. That is
+              what makes the journey feel less fragmented and far more alive.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
       <section className="section">
         <div className="card card-soft-primary">
-          <div className="section-label">Ready to see the Method in action?</div>
-          <h2>Let&apos;s run your roadmap through the Atmosphere.</h2>
+          <div className="section-label">Ready to experience the Method?</div>
+          <h2>Step into the atmosphere.</h2>
           <p>
-            Let&apos;s look at your current roadmap and see where we can add
-            some Spadosphere clarity.
+            Whether you are shaping an idea, refining a product, exploring
+            experiential learning, or looking for the right strategic
+            environment to grow in, the Spad Method is designed to help you move
+            with more clarity.
           </p>
           <div className="button-row">
             <Link href="/contact" className="btn btn-primary">
-              Book Your Strategy Audit
+              Enter the Method
             </Link>
           </div>
         </div>
