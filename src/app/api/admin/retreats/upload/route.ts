@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 function sanitizeFileName(name: string) {
   return name.replace(/[^a-zA-Z0-9.-]/g, "-").toLowerCase();
@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
     const safeName = sanitizeFileName(file.name.replace(/\.[^/.]+$/, ""));
     const filePath = `cms-retreats/${Date.now()}-${safeName}.${ext}`;
 
+    const supabaseAdmin = getSupabaseAdmin();
     const { error: uploadError } = await supabaseAdmin.storage
       .from("retreat-images")
       .upload(filePath, buffer, {

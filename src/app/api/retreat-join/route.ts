@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 type JoinPayload = {
   retreatTitle: string;
@@ -29,6 +29,7 @@ function getGoogleAuth() {
 }
 
 async function getRetreatJoinConfig() {
+  const supabaseAdmin = getSupabaseAdmin();
   const { data, error } = await supabaseAdmin
     .from("app_settings")
     .select("value_json")
