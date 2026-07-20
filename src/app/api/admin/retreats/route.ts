@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 type RetreatPayload = {
   id?: string;
@@ -73,6 +73,7 @@ function validatePublish(data: RetreatPayload) {
 }
 
 export async function GET() {
+  const supabaseAdmin = getSupabaseAdmin();
   const { data, error } = await supabaseAdmin
     .from("retreats")
     .select("*")
@@ -108,6 +109,7 @@ export async function POST(req: NextRequest) {
   const now = new Date().toISOString();
 
   if (body.id) {
+    const supabaseAdmin = getSupabaseAdmin();
     const { data: existingItem, error: existingError } = await supabaseAdmin
   .from("retreats")
   .select("first_published_on, status")
@@ -152,6 +154,7 @@ const updatePayload = {
   last_published_on: body.status === "Live" ? now : null,
   updated_at: now,
 };
+
 
 const { data, error } = await supabaseAdmin
   .from("retreats")
@@ -198,7 +201,7 @@ const { data, error } = await supabaseAdmin
     created_at: now,
     updated_at: now,
   };
-
+const supabaseAdmin = getSupabaseAdmin();
   const { data, error } = await supabaseAdmin
     .from("retreats")
     .insert(insertPayload)
@@ -220,6 +223,7 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Missing id." }, { status: 400 });
   }
 
+  const supabaseAdmin = getSupabaseAdmin();
   const { data: existing, error: fetchError } = await supabaseAdmin
     .from("retreats")
     .select("featured_image_path")
