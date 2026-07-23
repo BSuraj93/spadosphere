@@ -123,6 +123,16 @@ export default function TermsPage() {
                   <div className="legal-list-item">
                     <span className="legal-bullet" />
                     <p>
+                      <strong>Retreat Registration Information:</strong> If you submit a
+                      retreats registration form through our Website, you agree to provide
+                      accurate and complete information for operational, logistical, and
+                      communication purposes.
+                    </p>
+                  </div>
+
+                  <div className="legal-list-item">
+                    <span className="legal-bullet" />
+                    <p>
                       <strong>No E-Commerce/Purchases:</strong> Users cannot
                       purchase goods, products, or items directly through the
                       Website.

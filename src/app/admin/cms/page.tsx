@@ -1,5 +1,6 @@
 "use client";
 
+import BlogRichTextEditor from "@/components/cms/BlogRichTextEditor";
 import { useEffect, useMemo, useRef, useState } from "react";
 import CmsTopNav from "../../../components/cms/CmsTopNav";
 
@@ -63,6 +64,84 @@ type RetreatForm = {
   location: string;
   date: string;
   startTime: string;
+  slug: string;
+  tags: string;
+};
+
+type BlogView = "list" | "editor";
+type BlogStatus = "Live" | "Unpublished" | "Draft";
+type BlogConfirmAction = "publish" | "unpublish" | "delete" | null;
+
+type BlogRecord = {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  featuredimageurl: string | null;
+  featuredimagepath: string | null;
+  highlightintro: string | null;
+  body: string | null;
+  likes: number | null;
+  slug: string | null;
+  tags: string | null;
+  firstpublishedon: string | null;
+  lastpublishedon: string | null;
+  status: BlogStatus;
+  updatedat: string | null;
+};
+
+type BlogForm = {
+  id?: string;
+  title: string;
+  subtitle: string;
+  featuredImageUrl: string;
+  featuredImagePath: string;
+  highlightIntro: string;
+  body: string;
+  likes: string;
+  slug: string;
+  tags: string;
+};
+
+type CaseStudyView = "list" | "editor";
+type CaseStudyStatus = "Live" | "Unpublished" | "Draft";
+type CaseStudyConfirmAction = "publish" | "unpublish" | "delete" | null;
+
+type CaseStudyRecord = {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  featuredimageurl: string | null;
+  featuredimagepath: string | null;
+  clientname: string | null;
+  industry: string | null;
+  highlightintro: string | null;
+  challenge: string | null;
+  solution: string | null;
+  outcome: string | null;
+  body: string | null;
+  likes: number | null;
+  slug: string | null;
+  tags: string | null;
+  firstpublishedon: string | null;
+  lastpublishedon: string | null;
+  status: CaseStudyStatus;
+  updatedat: string | null;
+};
+
+type CaseStudyForm = {
+  id?: string;
+  title: string;
+  subtitle: string;
+  featuredImageUrl: string;
+  featuredImagePath: string;
+  clientName: string;
+  industry: string;
+  highlightIntro: string;
+  challenge: string;
+  solution: string;
+  outcome: string;
+  body: string;
+  likes: string;
   slug: string;
   tags: string;
 };
@@ -140,6 +219,72 @@ function mapRecordToForm(item: RetreatRecord): RetreatForm {
   };
 }
 
+const initialBlogForm: BlogForm = {
+  id: undefined,
+  title: "",
+  subtitle: "",
+  featuredImageUrl: "",
+  featuredImagePath: "",
+  highlightIntro: "",
+  body: "",
+  likes: "0",
+  slug: "",
+  tags: "",
+};
+
+function mapBlogRecordToForm(item: BlogRecord): BlogForm {
+  return {
+    id: item.id,
+    title: item.title ?? "",
+    subtitle: item.subtitle ?? "",
+    featuredImageUrl: item.featuredimageurl ?? "",
+    featuredImagePath: item.featuredimagepath ?? "",
+    highlightIntro: item.highlightintro ?? "",
+    body: item.body ?? "",
+    likes: item.likes != null ? String(item.likes) : "0",
+    slug: item.slug ?? "",
+    tags: item.tags ?? "",
+  };
+}
+
+const initialCaseStudyForm: CaseStudyForm = {
+  id: undefined,
+  title: "",
+  subtitle: "",
+  featuredImageUrl: "",
+  featuredImagePath: "",
+  clientName: "",
+  industry: "",
+  highlightIntro: "",
+  challenge: "",
+  solution: "",
+  outcome: "",
+  body: "",
+  likes: "0",
+  slug: "",
+  tags: "",
+};
+
+function mapCaseStudyRecordToForm(item: CaseStudyRecord): CaseStudyForm {
+  return {
+    id: item.id,
+    title: item.title ?? "",
+    subtitle: item.subtitle ?? "",
+    featuredImageUrl: item.featuredimageurl ?? "",
+    featuredImagePath: item.featuredimagepath ?? "",
+    clientName: item.clientname ?? "",
+    industry: item.industry ?? "",
+    highlightIntro: item.highlightintro ?? "",
+    challenge: item.challenge ?? "",
+    solution: item.solution ?? "",
+    outcome: item.outcome ?? "",
+    body: item.body ?? "",
+    likes: item.likes != null ? String(item.likes) : "0",
+    slug: item.slug ?? "",
+    tags: item.tags ?? "",
+  };
+}
+
 export default function CmsPage() {
   const [activeTab, setActiveTab] = useState<CmsTab>("home");
   const [retreatView, setRetreatView] = useState<RetreatView>("list");
@@ -153,10 +298,71 @@ export default function CmsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
 
+  const [blogView, setBlogView] = useState<BlogView>("list");
+  const [blogForm, setBlogForm] = useState<BlogForm>(initialBlogForm);
+  const [blogErrors, setBlogErrors] = useState<Record<string, string>>({});
+  const [blogMessage, setBlogMessage] = useState("");
+  const [blogConfirmAction, setBlogConfirmAction] = useState<BlogConfirmAction>(null);
+  const [blogEditorMode, setBlogEditorMode] = useState<"create" | "edit">("create");
+  const [blogEditorStatus, setBlogEditorStatus] = useState<"draft" | "live" | "unpublished">("draft");
+  const [blogs, setBlogs] = useState<BlogRecord[]>([]);
+  const [isLoadingBlogs, setIsLoadingBlogs] = useState(false);
+  const [isUploadingBlogImage, setIsUploadingBlogImage] = useState(false);
+
+  const [blogSearch, setBlogSearch] = useState("");
+  const [blogStatusFilter, setBlogStatusFilter] = useState("All");
+  const [blogPublishFrom, setBlogPublishFrom] = useState("");
+  const [blogPublishTo, setBlogPublishTo] = useState("");
+  const [blogPage, setBlogPage] = useState(1);
+  const [blogPageSize, setBlogPageSize] = useState(10);
+  const [blogTotal, setBlogTotal] = useState(0);
+
+  const [caseStudyView, setCaseStudyView] = useState<CaseStudyView>("list");
+const [caseStudyForm, setCaseStudyForm] = useState<CaseStudyForm>(initialCaseStudyForm);
+const [caseStudyErrors, setCaseStudyErrors] = useState<Record<string, string>>({});
+const [caseStudyMessage, setCaseStudyMessage] = useState("");
+const [caseStudyConfirmAction, setCaseStudyConfirmAction] = useState<CaseStudyConfirmAction>(null);
+const [caseStudyEditorMode, setCaseStudyEditorMode] = useState<"create" | "edit">("create");
+const [caseStudyEditorStatus, setCaseStudyEditorStatus] = useState<"draft" | "live" | "unpublished">("draft");
+const [caseStudies, setCaseStudies] = useState<CaseStudyRecord[]>([]);
+const [isLoadingCaseStudies, setIsLoadingCaseStudies] = useState(false);
+const [isUploadingCaseStudyImage, setIsUploadingCaseStudyImage] = useState(false);
+const [caseStudyListDeleteId, setCaseStudyListDeleteId] = useState<string | null>(null);
+const [caseStudyListDeleteTitle, setCaseStudyListDeleteTitle] = useState("");
+
+const [caseStudySearch, setCaseStudySearch] = useState("");
+const [caseStudyStatusFilter, setCaseStudyStatusFilter] = useState("All");
+const [caseStudyPublishFrom, setCaseStudyPublishFrom] = useState("");
+const [caseStudyPublishTo, setCaseStudyPublishTo] = useState("");
+const [caseStudyPage, setCaseStudyPage] = useState(1);
+const [caseStudyPageSize, setCaseStudyPageSize] = useState(10);
+const [caseStudyTotal, setCaseStudyTotal] = useState(0);
+
   const topMessageRef = useRef<HTMLDivElement | null>(null);
   const fieldRefs = useRef<
     Record<string, HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null>
   >({});
+
+  const blogFieldRefs = useRef<
+  Record<string, HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null>
+>({});
+
+const currentEditedBlog = useMemo(
+  () => blogs.find((item) => item.id === blogForm.id) ?? null,
+  [blogs, blogForm.id]
+);
+
+const showBlogList = activeTab === "blogs" && blogView === "list";
+const showBlogEditor = activeTab === "blogs" && blogView === "editor";
+
+const blogStatusMessage =
+  blogEditorStatus === "live"
+    ? `Last published on ${formatDisplayDateTime(currentEditedBlog?.lastpublishedon ?? null)}`
+    : blogEditorStatus === "unpublished"
+    ? `Last saved on ${formatDisplayDateTime(currentEditedBlog?.updatedat ?? null)}`
+    : `Draft last saved on ${formatDisplayDateTime(currentEditedBlog?.updatedat ?? null)}`;
+
+const blogTotalPages = Math.max(1, Math.ceil(blogTotal / blogPageSize));
 
   const stats = useMemo(
     () => ({
@@ -166,6 +372,27 @@ export default function CmsPage() {
     }),
     [retreats]
   );
+
+  const caseStudyFieldRefs = useRef<
+  Record<string, HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null>
+>({});
+
+const currentEditedCaseStudy = useMemo(
+  () => caseStudies.find((item) => item.id === caseStudyForm.id) ?? null,
+  [caseStudies, caseStudyForm.id]
+);
+
+const showCaseStudyList = activeTab === "case-studies" && caseStudyView === "list";
+const showCaseStudyEditor = activeTab === "case-studies" && caseStudyView === "editor";
+
+const caseStudyStatusMessage =
+  caseStudyEditorStatus === "live"
+    ? `Last published on ${formatDisplayDateTime(currentEditedCaseStudy?.lastpublishedon ?? null)}`
+    : caseStudyEditorStatus === "unpublished"
+    ? `Last saved on ${formatDisplayDateTime(currentEditedCaseStudy?.updatedat ?? null)}`
+    : `Draft last saved on ${formatDisplayDateTime(currentEditedCaseStudy?.updatedat ?? null)}`;
+
+const caseStudyTotalPages = Math.max(1, Math.ceil(caseStudyTotal / caseStudyPageSize));
 
   const showHome = activeTab === "home";
   const showRetreatList = activeTab === "retreats" && retreatView === "list";
@@ -204,6 +431,49 @@ export default function CmsPage() {
     }
   };
 
+  const scrollToFirstCaseStudyError = (errors: Record<string, string>) => {
+  const firstKey = Object.keys(errors)[0];
+  if (!firstKey) return;
+  const el = caseStudyFieldRefs.current[firstKey];
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => el.focus(), 120);
+  }
+};
+
+const setCaseStudyField = <K extends keyof CaseStudyForm>(
+  field: K,
+  value: CaseStudyForm[K]
+) => {
+  setCaseStudyForm((prev) => ({ ...prev, [field]: value }));
+  setCaseStudyErrors((prev) => {
+    if (!prev[field]) return prev;
+    const next = { ...prev };
+    delete next[field];
+    return next;
+  });
+};
+
+  const scrollToFirstBlogError = (errors: Record<string, string>) => {
+  const firstKey = Object.keys(errors)[0];
+  if (!firstKey) return;
+  const el = blogFieldRefs.current[firstKey];
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => el.focus(), 120);
+    }
+  };
+
+  const setBlogField = <K extends keyof BlogForm>(field: K, value: BlogForm[K]) => {
+    setBlogForm((prev) => ({ ...prev, [field]: value }));
+    setBlogErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  };
+
   const loadRetreats = async () => {
     setIsLoading(true);
 
@@ -224,9 +494,664 @@ export default function CmsPage() {
     }
   };
 
+  
   useEffect(() => {
     loadRetreats();
   }, []);
+
+  const loadBlogs = async (pageArg = blogPage, pageSizeArg = blogPageSize) => {
+  setIsLoadingBlogs(true);
+  try {
+    const params = new URLSearchParams({
+      page: String(pageArg),
+      pageSize: String(pageSizeArg),
+    });
+
+    if (blogSearch.trim()) params.set("search", blogSearch.trim());
+    if (blogStatusFilter) params.set("status", blogStatusFilter);
+    if (blogPublishFrom) params.set("publishFrom", blogPublishFrom);
+    if (blogPublishTo) params.set("publishTo", blogPublishTo);
+
+    const res = await fetch(`/api/admin/blogs?${params.toString()}`, { cache: "no-store" });
+    const json = await res.json();
+
+    if (!res.ok) {
+      setBlogMessage(json.error || "Could not load blogs.");
+      return;
+    }
+
+    setBlogs(json.items ?? []);
+    setBlogTotal(json.total ?? 0);
+    setBlogPage(json.page ?? pageArg);
+    setBlogPageSize(json.pageSize ?? pageSizeArg);
+  } catch {
+    setBlogMessage("Could not load blogs.");
+  } finally {
+    setIsLoadingBlogs(false);
+  }
+};
+
+useEffect(() => {
+  if (activeTab === "blogs" && blogView === "list") {
+    loadBlogs();
+  }
+}, [activeTab, blogView]);
+
+const loadCaseStudies = async (
+  pageArg = caseStudyPage,
+  pageSizeArg = caseStudyPageSize
+) => {
+  setIsLoadingCaseStudies(true);
+  try {
+    const params = new URLSearchParams({
+      page: String(pageArg),
+      pageSize: String(pageSizeArg),
+    });
+
+    if (caseStudySearch.trim()) params.set("search", caseStudySearch.trim());
+    if (caseStudyStatusFilter) params.set("status", caseStudyStatusFilter);
+    if (caseStudyPublishFrom) params.set("publishFrom", caseStudyPublishFrom);
+    if (caseStudyPublishTo) params.set("publishTo", caseStudyPublishTo);
+
+    const res = await fetch(`/api/admin/case-studies?${params.toString()}`, {
+      cache: "no-store",
+    });
+    const json = await res.json();
+
+    if (!res.ok) {
+      setCaseStudyMessage(json.error || "Could not load case studies.");
+      return;
+    }
+
+    setCaseStudies(json.items ?? []);
+    setCaseStudyTotal(json.total ?? 0);
+    setCaseStudyPage(json.page ?? pageArg);
+    setCaseStudyPageSize(json.pageSize ?? pageSizeArg);
+  } catch {
+    setCaseStudyMessage("Could not load case studies.");
+  } finally {
+    setIsLoadingCaseStudies(false);
+  }
+};
+
+useEffect(() => {
+  if (activeTab === "case-studies" && caseStudyView === "list") {
+    loadCaseStudies();
+  }
+}, [activeTab, caseStudyView]);
+
+const openBlogCreate = () => {
+  setActiveTab("blogs");
+  setBlogView("editor");
+  setBlogEditorMode("create");
+  setBlogEditorStatus("draft");
+  setBlogForm(initialBlogForm);
+  setBlogErrors({});
+  setBlogMessage("");
+  setBlogConfirmAction(null);
+};
+
+const openBlogList = async () => {
+  setActiveTab("blogs");
+  setBlogView("list");
+  setBlogErrors({});
+  setBlogConfirmAction(null);
+  await loadBlogs();
+  scrollToTopMessage();
+};
+
+const openBlogEdit = (item: BlogRecord) => {
+  setActiveTab("blogs");
+  setBlogView("editor");
+  setBlogEditorMode("edit");
+  setBlogEditorStatus(
+    item.status === "Live" ? "live" : item.status === "Unpublished" ? "unpublished" : "draft"
+  );
+  setBlogForm(mapBlogRecordToForm(item));
+  setBlogErrors({});
+  setBlogMessage("");
+  setBlogConfirmAction(null);
+  scrollToTopMessage();
+};
+
+const handleBlogImageUpload = async (file: File | null) => {
+  if (!file) return;
+
+  setIsUploadingBlogImage(true);
+  setBlogMessage("");
+
+  try {
+    const body = new FormData();
+    body.append("file", file);
+
+    const res = await fetch("/api/admin/blogs/upload", {
+      method: "POST",
+      body,
+    });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      setBlogMessage(json.error || "Image upload failed.");
+      scrollToTopMessage();
+      return;
+    }
+
+    setBlogForm((prev) => ({
+      ...prev,
+      featuredImageUrl: json.url,
+      featuredImagePath: json.path,
+    }));
+    setBlogMessage("Featured image uploaded successfully.");
+    scrollToTopMessage();
+  } catch {
+    setBlogMessage("Image upload failed.");
+    scrollToTopMessage();
+  } finally {
+    setIsUploadingBlogImage(false);
+  }
+};
+
+const handleBlogSaveDraft = async () => {
+  if (!blogForm.title.trim()) {
+    const errors = { title: "Title is required to save a draft." };
+    setBlogErrors(errors);
+    setBlogMessage("Please correct the errors to continue.");
+    scrollToFirstBlogError(errors);
+    return;
+  }
+
+  setBlogErrors({});
+  setBlogMessage("");
+
+  try {
+    const res = await fetch("/api/admin/blogs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...blogForm,
+        likes: Number(blogForm.likes || "0"),
+        status: "Draft",
+      }),
+    });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      if (json.fieldErrors) {
+        setBlogErrors(json.fieldErrors);
+        setBlogMessage("Please correct the errors to continue.");
+        scrollToFirstBlogError(json.fieldErrors);
+        return;
+      }
+      setBlogMessage(json.error || "Draft could not be saved.");
+      scrollToTopMessage();
+      return;
+    }
+
+    setBlogForm(mapBlogRecordToForm(json.item));
+    setBlogEditorMode("edit");
+    setBlogEditorStatus("draft");
+    setBlogMessage("Draft saved successfully.");
+    await loadBlogs();
+    scrollToTopMessage();
+  } catch {
+    setBlogMessage("Draft could not be saved.");
+    scrollToTopMessage();
+  }
+};
+
+const handleBlogPublishClick = () => {
+  const errors: Record<string, string> = {};
+  const requiredFields: (keyof BlogForm)[] = [
+    "title",
+    "subtitle",
+    "featuredImageUrl",
+    "highlightIntro",
+    "body",
+    "slug",
+    "tags",
+  ];
+
+  requiredFields.forEach((field) => {
+    const value = blogForm[field];
+    if (typeof value === "string" && !value.trim()) {
+      errors[field] = "This field is required to publish.";
+    }
+  });
+
+  setBlogErrors(errors);
+
+  if (Object.keys(errors).length > 0) {
+    setBlogMessage("Please correct the errors to continue.");
+    scrollToFirstBlogError(errors);
+    return;
+  }
+
+  setBlogMessage("");
+  setBlogConfirmAction("publish");
+};
+
+const handleBlogUnpublishClick = () => {
+  if (!blogForm.id) {
+    setBlogMessage("Please save the blog first before unpublishing.");
+    scrollToTopMessage();
+    return;
+  }
+  setBlogConfirmAction("unpublish");
+};
+
+const handleBlogDeleteClick = () => {
+  if (!blogForm.id) {
+    setBlogMessage("Please save the blog first before deleting.");
+    scrollToTopMessage();
+    return;
+  }
+  setBlogConfirmAction("delete");
+};
+
+const handleBlogConfirmAction = async () => {
+  if (blogConfirmAction === "publish") {
+    try {
+      const res = await fetch("/api/admin/blogs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...blogForm,
+          likes: Number(blogForm.likes || "0"),
+          status: "Live",
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        if (json.fieldErrors) {
+          setBlogErrors(json.fieldErrors);
+          setBlogMessage("Please correct the errors to continue.");
+          setBlogConfirmAction(null);
+          scrollToFirstBlogError(json.fieldErrors);
+          return;
+        }
+        setBlogMessage(json.error || "Blog could not be published.");
+        setBlogConfirmAction(null);
+        scrollToTopMessage();
+        return;
+      }
+
+      setBlogForm(mapBlogRecordToForm(json.item));
+      setBlogEditorMode("edit");
+      setBlogEditorStatus("live");
+      setBlogMessage("Blog published successfully.");
+      setBlogConfirmAction(null);
+      await loadBlogs();
+      scrollToTopMessage();
+      return;
+    } catch {
+      setBlogMessage("Blog could not be published.");
+      setBlogConfirmAction(null);
+      scrollToTopMessage();
+      return;
+    }
+  }
+
+  if (blogConfirmAction === "unpublish") {
+    try {
+      const res = await fetch("/api/admin/blogs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...blogForm,
+          likes: Number(blogForm.likes || "0"),
+          status: "Unpublished",
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        setBlogMessage(json.error || "Blog could not be unpublished.");
+        setBlogConfirmAction(null);
+        scrollToTopMessage();
+        return;
+      }
+
+      setBlogForm(mapBlogRecordToForm(json.item));
+      setBlogEditorMode("edit");
+      setBlogEditorStatus("unpublished");
+      setBlogMessage("Blog unpublished successfully.");
+      setBlogConfirmAction(null);
+      await loadBlogs();
+      scrollToTopMessage();
+      return;
+    } catch {
+      setBlogMessage("Blog could not be unpublished.");
+      setBlogConfirmAction(null);
+      scrollToTopMessage();
+      return;
+    }
+  }
+
+  if (blogConfirmAction === "delete") {
+    try {
+      const res = await fetch(`/api/admin/blogs?id=${blogForm.id}`, {
+        method: "DELETE",
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        setBlogMessage(json.error || "Blog could not be deleted.");
+        setBlogConfirmAction(null);
+        scrollToTopMessage();
+        return;
+      }
+
+      setBlogConfirmAction(null);
+      setBlogMessage("Blog deleted successfully.");
+      setBlogForm(initialBlogForm);
+      setBlogErrors({});
+      setBlogView("list");
+      setBlogEditorMode("create");
+      setBlogEditorStatus("draft");
+      await loadBlogs();
+      scrollToTopMessage();
+    } catch {
+      setBlogMessage("Blog could not be deleted.");
+      setBlogConfirmAction(null);
+      scrollToTopMessage();
+    }
+  }
+};
+
+const openCaseStudyCreate = () => {
+  setActiveTab("case-studies");
+  setCaseStudyView("editor");
+  setCaseStudyEditorMode("create");
+  setCaseStudyEditorStatus("draft");
+  setCaseStudyForm(initialCaseStudyForm);
+  setCaseStudyErrors({});
+  setCaseStudyMessage("");
+  setCaseStudyConfirmAction(null);
+};
+
+const openCaseStudyList = async () => {
+  setActiveTab("case-studies");
+  setCaseStudyView("list");
+  setCaseStudyErrors({});
+  setCaseStudyConfirmAction(null);
+  await loadCaseStudies();
+  scrollToTopMessage();
+};
+
+const openCaseStudyEdit = (item: CaseStudyRecord) => {
+  setActiveTab("case-studies");
+  setCaseStudyView("editor");
+  setCaseStudyEditorMode("edit");
+  setCaseStudyEditorStatus(
+    item.status === "Live" ? "live" : item.status === "Unpublished" ? "unpublished" : "draft"
+  );
+  setCaseStudyForm(mapCaseStudyRecordToForm(item));
+  setCaseStudyErrors({});
+  setCaseStudyMessage("");
+  setCaseStudyConfirmAction(null);
+  scrollToTopMessage();
+};
+
+const handleCaseStudyImageUpload = async (file: File | null) => {
+  if (!file) return;
+
+  setIsUploadingCaseStudyImage(true);
+  setCaseStudyMessage("");
+
+  try {
+    const body = new FormData();
+    body.append("file", file);
+
+    const res = await fetch("/api/admin/case-studies/upload", {
+      method: "POST",
+      body,
+    });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      setCaseStudyMessage(json.error || "Image upload failed.");
+      scrollToTopMessage();
+      return;
+    }
+
+    setCaseStudyForm((prev) => ({
+      ...prev,
+      featuredImageUrl: json.url,
+      featuredImagePath: json.path,
+    }));
+    setCaseStudyMessage("Featured image uploaded successfully.");
+    scrollToTopMessage();
+  } catch {
+    setCaseStudyMessage("Image upload failed.");
+    scrollToTopMessage();
+  } finally {
+    setIsUploadingCaseStudyImage(false);
+  }
+};
+
+const handleSaveCaseStudyDraft = async () => {
+  if (!caseStudyForm.title.trim()) {
+    const errors = { title: "Title is required to save a draft." };
+    setCaseStudyErrors(errors);
+    setCaseStudyMessage("Please correct the errors to continue.");
+    scrollToFirstCaseStudyError(errors);
+    return;
+  }
+
+  setCaseStudyErrors({});
+  setCaseStudyMessage("");
+
+  try {
+    const res = await fetch("/api/admin/case-studies", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...caseStudyForm,
+        likes: Number(caseStudyForm.likes || "0"),
+        status: "Draft",
+      }),
+    });
+
+    const json = await res.json();
+
+    if (!res.ok) {
+      if (json.fieldErrors) {
+        setCaseStudyErrors(json.fieldErrors);
+        setCaseStudyMessage("Please correct the errors to continue.");
+        scrollToFirstCaseStudyError(json.fieldErrors);
+        return;
+      }
+      setCaseStudyMessage(json.error || "Draft could not be saved.");
+      scrollToTopMessage();
+      return;
+    }
+
+    setCaseStudyForm(mapCaseStudyRecordToForm(json.item));
+    setCaseStudyEditorMode("edit");
+    setCaseStudyEditorStatus("draft");
+    setCaseStudyMessage("Draft saved successfully.");
+    await loadCaseStudies();
+    scrollToTopMessage();
+  } catch {
+    setCaseStudyMessage("Draft could not be saved.");
+    scrollToTopMessage();
+  }
+};
+
+const handleCaseStudyPublishClick = () => {
+  const errors: Record<string, string> = {};
+  const requiredFields: (keyof CaseStudyForm)[] = [
+    "title",
+    "subtitle",
+    "featuredImageUrl",
+    "clientName",
+    "industry",
+    "highlightIntro",
+    "challenge",
+    "solution",
+    "outcome",
+    "body",
+    "slug",
+    "tags",
+  ];
+
+  requiredFields.forEach((field) => {
+    const value = caseStudyForm[field];
+    if (typeof value === "string" && !value.trim()) {
+      errors[field] = "This field is required to publish.";
+    }
+  });
+
+  setCaseStudyErrors(errors);
+
+  if (Object.keys(errors).length > 0) {
+    setCaseStudyMessage("Please correct the errors to continue.");
+    scrollToFirstCaseStudyError(errors);
+    return;
+  }
+
+  setCaseStudyMessage("");
+  setCaseStudyConfirmAction("publish");
+};
+
+const handleCaseStudyUnpublishClick = () => {
+  if (!caseStudyForm.id) {
+    setCaseStudyMessage("Please save the case study first before unpublishing.");
+    scrollToTopMessage();
+    return;
+  }
+  setCaseStudyConfirmAction("unpublish");
+};
+
+const handleCaseStudyDeleteClick = () => {
+  if (!caseStudyForm.id) {
+    setCaseStudyMessage("Please save the case study first before deleting.");
+    scrollToTopMessage();
+    return;
+  }
+  setCaseStudyConfirmAction("delete");
+};
+
+const handleCaseStudyConfirmAction = async () => {
+  if (caseStudyConfirmAction === "publish") {
+    try {
+      const res = await fetch("/api/admin/case-studies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...caseStudyForm,
+          likes: Number(caseStudyForm.likes || "0"),
+          status: "Live",
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        if (json.fieldErrors) {
+          setCaseStudyErrors(json.fieldErrors);
+          setCaseStudyMessage("Please correct the errors to continue.");
+          setCaseStudyConfirmAction(null);
+          scrollToFirstCaseStudyError(json.fieldErrors);
+          return;
+        }
+        setCaseStudyMessage(json.error || "Case study could not be published.");
+        setCaseStudyConfirmAction(null);
+        scrollToTopMessage();
+        return;
+      }
+
+      setCaseStudyForm(mapCaseStudyRecordToForm(json.item));
+      setCaseStudyEditorMode("edit");
+      setCaseStudyEditorStatus("live");
+      setCaseStudyMessage("Case study published successfully.");
+      setCaseStudyConfirmAction(null);
+      await loadCaseStudies();
+      scrollToTopMessage();
+      return;
+    } catch {
+      setCaseStudyMessage("Case study could not be published.");
+      setCaseStudyConfirmAction(null);
+      scrollToTopMessage();
+      return;
+    }
+  }
+
+  if (caseStudyConfirmAction === "unpublish") {
+    try {
+      const res = await fetch("/api/admin/case-studies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...caseStudyForm,
+          likes: Number(caseStudyForm.likes || "0"),
+          status: "Unpublished",
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        setCaseStudyMessage(json.error || "Case study could not be unpublished.");
+        setCaseStudyConfirmAction(null);
+        scrollToTopMessage();
+        return;
+      }
+
+      setCaseStudyForm(mapCaseStudyRecordToForm(json.item));
+      setCaseStudyEditorMode("edit");
+      setCaseStudyEditorStatus("unpublished");
+      setCaseStudyMessage("Case study unpublished successfully.");
+      setCaseStudyConfirmAction(null);
+      await loadCaseStudies();
+      scrollToTopMessage();
+      return;
+    } catch {
+      setCaseStudyMessage("Case study could not be unpublished.");
+      setCaseStudyConfirmAction(null);
+      scrollToTopMessage();
+      return;
+    }
+  }
+
+  if (caseStudyConfirmAction === "delete") {
+    try {
+      const res = await fetch(`/api/admin/case-studies?id=${caseStudyForm.id}`, {
+        method: "DELETE",
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        setCaseStudyMessage(json.error || "Case study could not be deleted.");
+        setCaseStudyConfirmAction(null);
+        scrollToTopMessage();
+        return;
+      }
+
+      setCaseStudyConfirmAction(null);
+      setCaseStudyMessage("Case study deleted successfully.");
+      setCaseStudyForm(initialCaseStudyForm);
+      setCaseStudyErrors({});
+      setCaseStudyView("list");
+      setCaseStudyEditorMode("create");
+      setCaseStudyEditorStatus("draft");
+      await loadCaseStudies();
+      scrollToTopMessage();
+    } catch {
+      setCaseStudyMessage("Case study could not be deleted.");
+      setCaseStudyConfirmAction(null);
+      scrollToTopMessage();
+    }
+  }
+};
 
   const setField = <K extends keyof RetreatForm>(field: K, value: RetreatForm[K]) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -537,7 +1462,7 @@ export default function CmsPage() {
                   <button
                     type="button"
                     className="cms-primary-action"
-                    onClick={() => setActiveTab("blogs")}
+                    onClick={openBlogCreate}
                   >
                     Create blog
                   </button>
@@ -590,25 +1515,906 @@ export default function CmsPage() {
 
           {activeTab === "blogs" && (
             <section className="cms-section-card">
-              <div className="cms-section-eyebrow">Phase 2</div>
-              <h1 className="cms-page-title">Blogs</h1>
-              <p className="cms-page-copy">
-                Blogs module placeholder. This tab will later hold listing, filters,
-                pagination, and blog create/edit actions.
-              </p>
+              {showBlogList && (
+  <section className="cms-module">
+    <div className="cms-module-head">
+      <div>
+        <div className="cms-section-eyebrow">Blogs</div>
+        <h1 className="cms-page-title">Blogs</h1>
+        <p className="cms-page-copy">
+          Active blogs are listed here. Unpublished and draft blogs can be viewed using the filters below.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        className="cms-primary-action cms-inline-action"
+        onClick={openBlogCreate}
+      >
+        Create blog
+      </button>
+    </div>
+
+    {blogMessage ? <div className="cms-success-banner">{blogMessage}</div> : null}
+
+    <div className="cms-filters">
+      <label className="cms-field">
+        <span>Search by keyword</span>
+        <input
+          type="text"
+          placeholder="Search blogs"
+          value={blogSearch}
+          onChange={(e) => setBlogSearch(e.target.value)}
+        />
+      </label>
+
+      <label className="cms-field">
+        <span>Status</span>
+        <select
+  value={blogStatusFilter}
+  onChange={(e) => setBlogStatusFilter(e.target.value)}
+>
+  <option value="Live">Live</option>
+  <option value="Draft">Draft</option>
+  <option value="Unpublished">Unpublished</option>
+  <option value="All">All</option>
+</select>
+      </label>
+
+      <label className="cms-field">
+        <span>Last publish date from</span>
+        <input
+          type="date"
+          value={blogPublishFrom}
+          onChange={(e) => setBlogPublishFrom(e.target.value)}
+        />
+      </label>
+
+      <label className="cms-field">
+        <span>Last publish date to</span>
+        <input
+          type="date"
+          value={blogPublishTo}
+          onChange={(e) => setBlogPublishTo(e.target.value)}
+        />
+      </label>
+
+      <button
+        type="button"
+        className="cms-filter-btn"
+        onClick={() => {
+          setBlogPage(1);
+          loadBlogs(1, blogPageSize);
+        }}
+      >
+        Apply filters
+      </button>
+    </div>
+
+    <div className="cms-table-wrap">
+      {isLoadingBlogs ? (
+        <div className="cms-empty-state">Loading blogs...</div>
+      ) : blogs.length === 0 ? (
+        <div className="cms-empty-state">0 items to show</div>
+      ) : (
+        <table className="cms-table">
+          <thead>
+            <tr>
+              <th>Blog title</th>
+              <th>Likes</th>
+              <th>First publish on</th>
+              <th>Last published on</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {blogs.map((item) => (
+              <tr key={item.id}>
+                <td>{item.title}</td>
+                <td>{item.likes ?? 0}</td>
+                <td>{formatDisplayDateTime(item.firstpublishedon)}</td>
+                <td>{formatDisplayDateTime(item.lastpublishedon)}</td>
+                <td>
+                  <span
+                    className={`cms-status ${
+                      item.status === "Live"
+                        ? "is-live"
+                        : item.status === "Unpublished"
+                        ? "is-unpublished"
+                        : "is-draft"
+                    }`}
+                  >
+                    {item.status}
+                  </span>
+                </td>
+                <td>
+                  <div className="cms-row-actions">
+                    <button type="button" onClick={() => openBlogEdit(item)}>
+                      Edit
+                    </button>
+                    
+                    {item.status === "Live" ? (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          setBlogForm(mapBlogRecordToForm(item));
+                          setBlogConfirmAction("unpublish");
+                        }}
+                      >
+                        Unpublish
+                      </button>
+                    ) : null}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+
+    <div className="cms-pagination">
+      <div className="cms-pagination-info">
+        Showing {blogs.length} of {blogTotal} blog{blogTotal === 1 ? "" : "s"}
+      </div>
+
+      <div className="cms-row-actions">
+        <button
+          type="button"
+          onClick={() => loadBlogs(Math.max(1, blogPage - 1), blogPageSize)}
+          disabled={blogPage <= 1}
+        >
+          Previous
+        </button>
+        <button
+          type="button"
+          onClick={() => loadBlogs(Math.min(blogTotalPages, blogPage + 1), blogPageSize)}
+          disabled={blogPage >= blogTotalPages}
+        >
+          Next
+        </button>
+      </div>
+
+      <label className="cms-field cms-page-size">
+        <span>Items per page</span>
+        <select
+          value={String(blogPageSize)}
+          onChange={(e) => {
+            const newSize = Number(e.target.value) === 25 ? 25 : 10;
+            setBlogPageSize(newSize);
+            setBlogPage(1);
+            loadBlogs(1, newSize);
+          }}
+        >
+          <option value="10">10</option>
+          <option value="25">25</option>
+        </select>
+      </label>
+    </div>
+  </section>
+)}
+
+{showBlogEditor && (
+  <section className="cms-editor">
+    <div className="cms-editor-head">
+      <div>
+        <div className="cms-section-eyebrow">Blog editor</div>
+        <h1 className="cms-page-title">
+          {blogEditorMode === "create" ? "Create blog" : "Edit blog"}
+        </h1>
+        <p className="cms-page-copy">{blogStatusMessage}</p>
+      </div>
+
+      <button
+        type="button"
+        className="cms-secondary-action"
+        onClick={openBlogList}
+      >
+        Back to list
+      </button>
+    </div>
+
+    {blogMessage ? <div className="cms-success-banner">{blogMessage}</div> : null}
+
+    <p className="cms-action-hint">
+      Save Draft keeps the blog private. Publish requires all required fields.
+    </p>
+
+    <div className="cms-form-grid">
+      <label className="cms-field">
+        <span>Title</span>
+        <input
+          ref={(el) => {
+            blogFieldRefs.current.title = el;
+          }}
+          value={blogForm.title}
+          onChange={(e) => setBlogField("title", e.target.value)}
+          type="text"
+        />
+        {blogErrors.title ? <small className="cms-error-text">{blogErrors.title}</small> : null}
+      </label>
+
+      <label className="cms-field">
+        <span>Subtitle</span>
+        <input
+          ref={(el) => {
+            blogFieldRefs.current.subtitle = el;
+          }}
+          value={blogForm.subtitle}
+          onChange={(e) => setBlogField("subtitle", e.target.value)}
+          type="text"
+        />
+        {blogErrors.subtitle ? <small className="cms-error-text">{blogErrors.subtitle}</small> : null}
+      </label>
+
+      <label className="cms-field cms-span-2">
+        <span>Featured image</span>
+        <input
+          ref={(el) => {
+            blogFieldRefs.current.featuredImageUrl = el;
+          }}
+          type="file"
+          accept=".jpg,.jpeg,.png,.webp"
+          onChange={(e) => handleBlogImageUpload(e.target.files?.[0] ?? null)}
+        />
+        {isUploadingBlogImage ? (
+          <small className="cms-upload-note">Uploading image...</small>
+        ) : null}
+        {blogForm.featuredImageUrl ? (
+          <div className="cms-image-preview-wrap">
+            <img
+              src={blogForm.featuredImageUrl}
+              alt="Featured preview"
+              className="cms-image-preview"
+            />
+          </div>
+        ) : null}
+        {blogErrors.featuredImageUrl ? (
+          <small className="cms-error-text">{blogErrors.featuredImageUrl}</small>
+        ) : null}
+      </label>
+
+      <label className="cms-field cms-span-2">
+        <span>Highlight intro</span>
+        <textarea
+          ref={(el) => {
+            blogFieldRefs.current.highlightIntro = el;
+          }}
+          rows={3}
+          value={blogForm.highlightIntro}
+          onChange={(e) => setBlogField("highlightIntro", e.target.value)}
+        />
+        {blogErrors.highlightIntro ? (
+          <small className="cms-error-text">{blogErrors.highlightIntro}</small>
+        ) : null}
+      </label>
+
+      <label className="cms-field cms-span-2">
+  <span>Blog body</span>
+  <div
+    ref={(el) => {
+      blogFieldRefs.current.body = el as HTMLTextAreaElement | null;
+    }}
+  >
+    <BlogRichTextEditor
+      value={blogForm.body}
+      onChange={(value) => setBlogField("body", value)}
+    />
+  </div>
+  {blogErrors.body ? <small className="cms-error-text">{blogErrors.body}</small> : null}
+</label>
+
+      <label className="cms-field">
+        <span>Likes counter</span>
+        <input
+          value={blogForm.likes}
+          type="number"
+          min="0"
+          disabled
+          readOnly
+        />
+      </label>
+
+      <label className="cms-field">
+        <span>Slug</span>
+        <input
+          ref={(el) => {
+            blogFieldRefs.current.slug = el;
+          }}
+          value={blogForm.slug}
+          onChange={(e) => setBlogField("slug", e.target.value)}
+          type="text"
+        />
+        {blogErrors.slug ? <small className="cms-error-text">{blogErrors.slug}</small> : null}
+      </label>
+
+      <label className="cms-field cms-span-2">
+        <span>Tags</span>
+        <input
+          ref={(el) => {
+            blogFieldRefs.current.tags = el;
+          }}
+          value={blogForm.tags}
+          onChange={(e) => setBlogField("tags", e.target.value)}
+          type="text"
+          placeholder="comma,separated,tags"
+        />
+        {blogErrors.tags ? <small className="cms-error-text">{blogErrors.tags}</small> : null}
+      </label>
+    </div>
+
+    <div className="cms-editor-actions">
+      <button
+        type="button"
+        className="cms-primary-action"
+        onClick={handleBlogSaveDraft}
+        disabled={isUploadingBlogImage}
+      >
+        Save Draft
+      </button>
+
+      {blogEditorMode === "edit" && blogEditorStatus === "live" ? (
+        <button
+          type="button"
+          className="cms-secondary-action"
+          onClick={handleBlogUnpublishClick}
+          disabled={isUploadingBlogImage}
+        >
+          Unpublish
+        </button>
+      ) : null}
+
+      <button
+        type="button"
+        className="cms-secondary-action"
+        onClick={handleBlogPublishClick}
+        disabled={isUploadingBlogImage}
+      >
+        Publish
+      </button>
+
+      <button
+        type="button"
+        className="cms-danger-action"
+        onClick={handleBlogDeleteClick}
+        disabled={isUploadingBlogImage}
+      >
+        Delete
+      </button>
+    </div>
+
+    {blogConfirmAction ? (
+      <div className="cms-modal-backdrop" role="presentation">
+        <div
+          className="cms-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cms-blog-confirm-title"
+        >
+          <h2 id="cms-blog-confirm-title">
+            {blogConfirmAction === "publish"
+              ? "Publish blog?"
+              : blogConfirmAction === "unpublish"
+              ? "Unpublish blog?"
+              : "Delete blog?"}
+          </h2>
+
+          <p>
+            {blogConfirmAction === "publish"
+              ? "This blog will become live on the website."
+              : blogConfirmAction === "unpublish"
+              ? "This blog will be unpublished and can be published again later."
+              : "This will permanently remove the blog from the database."}
+          </p>
+
+          <div className="cms-modal-actions">
+            <button
+              type="button"
+              className="cms-secondary-action"
+              onClick={() => setBlogConfirmAction(null)}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className={
+                blogConfirmAction === "delete"
+                  ? "cms-danger-action"
+                  : "cms-primary-action"
+              }
+              onClick={handleBlogConfirmAction}
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+    ) : null}
+  </section>
+)}
             </section>
           )}
 
           {activeTab === "case-studies" && (
-            <section className="cms-section-card">
-              <div className="cms-section-eyebrow">Phase 2</div>
-              <h1 className="cms-page-title">Case Studies</h1>
-              <p className="cms-page-copy">
-                Case Studies module placeholder. This tab will later hold listing,
-                filters, pagination, and create/edit actions.
-              </p>
-            </section>
+  <section className="cms-section-card">
+    {showCaseStudyList && (
+      <section className="cms-module">
+        <div className="cms-module-head">
+          <div>
+            <div className="cms-section-eyebrow">Case Studies</div>
+            <h1 className="cms-page-title">Case studies</h1>
+            <p className="cms-page-copy">
+              Active case studies are listed here. Unpublished and draft case studies can be viewed using the filters below.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="cms-primary-action cms-inline-action"
+            onClick={openCaseStudyCreate}
+          >
+            Create case study
+          </button>
+        </div>
+
+        {caseStudyMessage ? <div className="cms-success-banner">{caseStudyMessage}</div> : null}
+
+        <div className="cms-filters">
+          <label className="cms-field">
+            <span>Search by keyword</span>
+            <input
+              type="text"
+              placeholder="Search case studies"
+              value={caseStudySearch}
+              onChange={(e) => setCaseStudySearch(e.target.value)}
+            />
+          </label>
+
+          <label className="cms-field">
+            <span>Status</span>
+            <select
+              value={caseStudyStatusFilter}
+              onChange={(e) => setCaseStudyStatusFilter(e.target.value)}
+            >
+              <option value="Live">Live</option>
+              <option value="Draft">Draft</option>
+              <option value="Unpublished">Unpublished</option>
+              <option value="All">All</option>
+            </select>
+          </label>
+
+          <label className="cms-field">
+            <span>Last publish date from</span>
+            <input
+              type="date"
+              value={caseStudyPublishFrom}
+              onChange={(e) => setCaseStudyPublishFrom(e.target.value)}
+            />
+          </label>
+
+          <label className="cms-field">
+            <span>Last publish date to</span>
+            <input
+              type="date"
+              value={caseStudyPublishTo}
+              onChange={(e) => setCaseStudyPublishTo(e.target.value)}
+            />
+          </label>
+
+          <button
+            type="button"
+            className="cms-filter-btn"
+            onClick={() => {
+              setCaseStudyPage(1);
+              loadCaseStudies(1, caseStudyPageSize);
+            }}
+          >
+            Apply filters
+          </button>
+        </div>
+
+        <div className="cms-table-wrap">
+          {isLoadingCaseStudies ? (
+            <div className="cms-empty-state">Loading case studies...</div>
+          ) : caseStudies.length === 0 ? (
+            <div className="cms-empty-state">0 items to show</div>
+          ) : (
+            <table className="cms-table">
+              <thead>
+                <tr>
+                  <th>Case study title</th>
+                  <th>Likes</th>
+                  <th>First publish on</th>
+                  <th>Last published on</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {caseStudies.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.title}</td>
+                    <td>{item.likes ?? 0}</td>
+                    <td>{formatDisplayDateTime(item.firstpublishedon)}</td>
+                    <td>{formatDisplayDateTime(item.lastpublishedon)}</td>
+                    <td>
+                      <span
+                        className={`cms-status ${
+                          item.status === "Live"
+                            ? "is-live"
+                            : item.status === "Unpublished"
+                            ? "is-unpublished"
+                            : "is-draft"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="cms-row-actions">
+                        <button type="button" onClick={() => openCaseStudyEdit(item)}>
+                          Edit
+                        </button>
+                        
+                        {item.status === "Live" ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCaseStudyForm(mapCaseStudyRecordToForm(item));
+                              setCaseStudyConfirmAction("unpublish");
+                            }}
+                          >
+                            Unpublish
+                          </button>
+                        ) : null}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
+        </div>
+
+        <div className="cms-pagination">
+          <div className="cms-pagination-info">
+            Showing {caseStudies.length} of {caseStudyTotal} case stud{caseStudyTotal === 1 ? "y" : "ies"}
+          </div>
+
+          <div className="cms-row-actions">
+            <button
+              type="button"
+              onClick={() =>
+                loadCaseStudies(Math.max(1, caseStudyPage - 1), caseStudyPageSize)
+              }
+              disabled={caseStudyPage <= 1}
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                loadCaseStudies(Math.min(caseStudyTotalPages, caseStudyPage + 1), caseStudyPageSize)
+              }
+              disabled={caseStudyPage >= caseStudyTotalPages}
+            >
+              Next
+            </button>
+          </div>
+
+          <label className="cms-field cms-page-size">
+            <span>Items per page</span>
+            <select
+              value={String(caseStudyPageSize)}
+              onChange={(e) => {
+                const newSize = Number(e.target.value) === 25 ? 25 : 10;
+                setCaseStudyPageSize(newSize);
+                setCaseStudyPage(1);
+                loadCaseStudies(1, newSize);
+              }}
+            >
+              <option value="10">10</option>
+              <option value="25">25</option>
+            </select>
+          </label>
+        </div>
+      </section>
+    )}
+
+    {showCaseStudyEditor && (
+      <section className="cms-editor">
+        <div className="cms-editor-head">
+          <div>
+            <div className="cms-section-eyebrow">Case study editor</div>
+            <h1 className="cms-page-title">
+              {caseStudyEditorMode === "create" ? "Create case study" : "Edit case study"}
+            </h1>
+            <p className="cms-page-copy">{caseStudyStatusMessage}</p>
+          </div>
+
+          <button
+            type="button"
+            className="cms-secondary-action"
+            onClick={openCaseStudyList}
+          >
+            Back to list
+          </button>
+        </div>
+
+        {caseStudyMessage ? <div className="cms-success-banner">{caseStudyMessage}</div> : null}
+
+        <p className="cms-action-hint">
+          Save Draft keeps the case study private. Publish requires all required fields.
+        </p>
+
+        <div className="cms-form-grid">
+          <label className="cms-field">
+            <span>Title</span>
+            <input
+              ref={(el) => {
+                caseStudyFieldRefs.current.title = el;
+              }}
+              value={caseStudyForm.title}
+              onChange={(e) => setCaseStudyField("title", e.target.value)}
+              type="text"
+            />
+            {caseStudyErrors.title ? <small className="cms-error-text">{caseStudyErrors.title}</small> : null}
+          </label>
+
+          <label className="cms-field">
+            <span>Subtitle</span>
+            <input
+              ref={(el) => {
+                caseStudyFieldRefs.current.subtitle = el;
+              }}
+              value={caseStudyForm.subtitle}
+              onChange={(e) => setCaseStudyField("subtitle", e.target.value)}
+              type="text"
+            />
+            {caseStudyErrors.subtitle ? <small className="cms-error-text">{caseStudyErrors.subtitle}</small> : null}
+          </label>
+
+          <label className="cms-field cms-span-2">
+            <span>Featured image</span>
+            <input
+              ref={(el) => {
+                caseStudyFieldRefs.current.featuredImageUrl = el;
+              }}
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp"
+              onChange={(e) => handleCaseStudyImageUpload(e.target.files?.[0] ?? null)}
+            />
+            {isUploadingCaseStudyImage ? (
+              <small className="cms-upload-note">Uploading image...</small>
+            ) : null}
+            {caseStudyForm.featuredImageUrl ? (
+              <div className="cms-image-preview-wrap">
+                <img
+                  src={caseStudyForm.featuredImageUrl}
+                  alt="Featured preview"
+                  className="cms-image-preview"
+                />
+              </div>
+            ) : null}
+            {caseStudyErrors.featuredImageUrl ? (
+              <small className="cms-error-text">{caseStudyErrors.featuredImageUrl}</small>
+            ) : null}
+          </label>
+
+          <label className="cms-field">
+            <span>Client Name</span>
+            <input
+              ref={(el) => {
+                caseStudyFieldRefs.current.clientName = el;
+              }}
+              value={caseStudyForm.clientName}
+              onChange={(e) => setCaseStudyField("clientName", e.target.value)}
+              type="text"
+            />
+            {caseStudyErrors.clientName ? <small className="cms-error-text">{caseStudyErrors.clientName}</small> : null}
+          </label>
+
+          <label className="cms-field">
+            <span>Industry</span>
+            <input
+              ref={(el) => {
+                caseStudyFieldRefs.current.industry = el;
+              }}
+              value={caseStudyForm.industry}
+              onChange={(e) => setCaseStudyField("industry", e.target.value)}
+              type="text"
+            />
+            {caseStudyErrors.industry ? <small className="cms-error-text">{caseStudyErrors.industry}</small> : null}
+          </label>
+
+          <label className="cms-field cms-span-2">
+            <span>Highlight intro</span>
+            <textarea
+              ref={(el) => {
+                caseStudyFieldRefs.current.highlightIntro = el;
+              }}
+              rows={3}
+              value={caseStudyForm.highlightIntro}
+              onChange={(e) => setCaseStudyField("highlightIntro", e.target.value)}
+            />
+            {caseStudyErrors.highlightIntro ? (
+              <small className="cms-error-text">{caseStudyErrors.highlightIntro}</small>
+            ) : null}
+          </label>
+
+          <div className="cms-field cms-span-2">
+            <span>Challenge</span>
+            <BlogRichTextEditor
+              value={caseStudyForm.challenge}
+              onChange={(value) => setCaseStudyField("challenge", value)}
+            />
+            {caseStudyErrors.challenge ? (
+              <small className="cms-error-text">{caseStudyErrors.challenge}</small>
+            ) : null}
+          </div>
+
+          <div className="cms-field cms-span-2">
+            <span>Solution</span>
+            <BlogRichTextEditor
+              value={caseStudyForm.solution}
+              onChange={(value) => setCaseStudyField("solution", value)}
+            />
+            {caseStudyErrors.solution ? (
+              <small className="cms-error-text">{caseStudyErrors.solution}</small>
+            ) : null}
+          </div>
+
+          <div className="cms-field cms-span-2">
+            <span>Outcome</span>
+            <BlogRichTextEditor
+              value={caseStudyForm.outcome}
+              onChange={(value) => setCaseStudyField("outcome", value)}
+            />
+            {caseStudyErrors.outcome ? (
+              <small className="cms-error-text">{caseStudyErrors.outcome}</small>
+            ) : null}
+          </div>
+
+          <div className="cms-field cms-span-2">
+            <span>Case study body</span>
+            <BlogRichTextEditor
+              value={caseStudyForm.body}
+              onChange={(value) => setCaseStudyField("body", value)}
+            />
+            {caseStudyErrors.body ? <small className="cms-error-text">{caseStudyErrors.body}</small> : null}
+          </div>
+
+          <label className="cms-field">
+            <span>Likes counter</span>
+            <input
+              value={caseStudyForm.likes}
+              type="number"
+              min="0"
+              disabled
+              readOnly
+            />
+          </label>
+
+          <label className="cms-field">
+            <span>Slug</span>
+            <input
+              ref={(el) => {
+                caseStudyFieldRefs.current.slug = el;
+              }}
+              value={caseStudyForm.slug}
+              onChange={(e) => setCaseStudyField("slug", e.target.value)}
+              type="text"
+            />
+            {caseStudyErrors.slug ? <small className="cms-error-text">{caseStudyErrors.slug}</small> : null}
+          </label>
+
+          <label className="cms-field cms-span-2">
+            <span>Tags</span>
+            <input
+              ref={(el) => {
+                caseStudyFieldRefs.current.tags = el;
+              }}
+              value={caseStudyForm.tags}
+              onChange={(e) => setCaseStudyField("tags", e.target.value)}
+              type="text"
+              placeholder="comma,separated,tags"
+            />
+            {caseStudyErrors.tags ? <small className="cms-error-text">{caseStudyErrors.tags}</small> : null}
+          </label>
+        </div>
+
+        <div className="cms-editor-actions">
+          <button
+            type="button"
+            className="cms-primary-action"
+            onClick={handleSaveCaseStudyDraft}
+            disabled={isUploadingCaseStudyImage}
+          >
+            Save Draft
+          </button>
+
+          {caseStudyEditorMode === "edit" && caseStudyEditorStatus === "live" ? (
+            <button
+              type="button"
+              className="cms-secondary-action"
+              onClick={handleCaseStudyUnpublishClick}
+              disabled={isUploadingCaseStudyImage}
+            >
+              Unpublish
+            </button>
+          ) : null}
+
+          <button
+            type="button"
+            className="cms-secondary-action"
+            onClick={handleCaseStudyPublishClick}
+            disabled={isUploadingCaseStudyImage}
+          >
+            Publish
+          </button>
+
+          <button
+            type="button"
+            className="cms-danger-action"
+            onClick={handleCaseStudyDeleteClick}
+            disabled={isUploadingCaseStudyImage}
+          >
+            Delete
+          </button>
+        </div>
+
+        {caseStudyConfirmAction ? (
+          <div className="cms-modal-backdrop" role="presentation">
+            <div
+              className="cms-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="cms-case-study-confirm-title"
+            >
+              <h2 id="cms-case-study-confirm-title">
+                {caseStudyConfirmAction === "publish"
+                  ? "Publish case study?"
+                  : caseStudyConfirmAction === "unpublish"
+                  ? "Unpublish case study?"
+                  : "Delete case study?"}
+              </h2>
+
+              <p>
+                {caseStudyConfirmAction === "publish"
+                  ? "This case study will become live on the website."
+                  : caseStudyConfirmAction === "unpublish"
+                  ? "This case study will be unpublished and can be published again later."
+                  : "This will permanently remove the case study from the database."}
+              </p>
+
+              <div className="cms-modal-actions">
+                <button
+                  type="button"
+                  className="cms-secondary-action"
+                  onClick={() => setCaseStudyConfirmAction(null)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className={
+                    caseStudyConfirmAction === "delete"
+                      ? "cms-danger-action"
+                      : "cms-primary-action"
+                  }
+                  onClick={handleCaseStudyConfirmAction}
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </section>
+    )}
+  </section>
+)}
 
           {showRetreatList && (
             <section className="cms-module">
@@ -715,16 +2521,7 @@ export default function CmsPage() {
                               <button type="button" onClick={() => openRetreatEdit(item)}>
                                 Edit
                               </button>
-                              <button
-                                type="button"
-                                onClick={async () => {
-                                  setForm(mapRecordToForm(item));
-                                  setConfirmAction("delete");
-                                }}
-                              >
-                                Delete
-                              </button>
-                            </div>
+                             </div>
                           </td>
                         </tr>
                       ))}
