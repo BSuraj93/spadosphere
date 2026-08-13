@@ -31,10 +31,8 @@ type Retreat = {
 };
 
 async function getRetreats(): Promise<Retreat[]> {
-  // Get raw site URL or fallback
   const rawBaseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://spadosphere.com";
-  
-  // Safely strip any trailing slashes to prevent double-slash redirects (e.g. //api/retreats)
+  // Strip any trailing slash safely (e.g., https://spadosphere.com/ -> https://spadosphere.com)
   const baseUrl = rawBaseUrl.replace(/\/+$/, "");
 
   try {
@@ -47,14 +45,14 @@ async function getRetreats(): Promise<Retreat[]> {
     });
 
     if (!res.ok) {
-      console.error(`[getRetreats] Server fetch failed with status: ${res.status}`);
+      console.error(`[getRetreats] HTTP Error Status: ${res.status}`);
       return [];
     }
 
     const data = await res.json();
     return data.items ?? [];
   } catch (err) {
-    console.error("[getRetreats] Network/Fetch error during server render:", err);
+    console.error("[getRetreats] Fetch failed:", err);
     return [];
   }
 }
