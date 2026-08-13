@@ -14,9 +14,9 @@ const quicksand = Quicksand({
 });
 
 export const metadata: Metadata = {
-  title: "Spadosphere | Strategy & Product Design for Early-Stage Startups",
+  title: "Spadosphere | Strategy, Product & Design",
   description:
-    "Spadosphere is a premium consulting boutique for very early to early-stage startups, combining Strategy and Product Design to build Minimum Lovable Products.",
+    "Spadosphere is a Strategy, Product and Design focused atmosphere for anyone who loves to build or do anything they love.",
 };
 
 export default function RootLayout({
@@ -27,6 +27,21 @@ export default function RootLayout({
   return (
     <html lang="en" className={quicksand.variable}>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: `
+{
+  "@context": "https://schema.org",
+  "@type": "Corporation",
+  "name": "Spadosphere",
+  "url": "https://spadosphere.com/",
+  "logo": "https://spadosphere.com/logo.svg",
+  "sameAs": "https://www.linkedin.com/company/spadosphere"
+}
+`
+          }}
+        />
         <div className="app-shell">
           <Navbar />
           <main className="app-main">{children}</main>

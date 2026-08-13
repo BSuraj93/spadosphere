@@ -17,6 +17,10 @@ const resourceLinks = [
   { href: "/blog", label: "Blog" },
 ];
 
+const assessmentLinks = [
+  { href: "/iamme-personality-test", label: "IAMME Personality Test" },
+];
+
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -27,6 +31,12 @@ export default function Navbar() {
   };
 
   const closeMobile = () => setOpen(false);
+
+  // Removes focus from active/hovered element to close pure CSS dropdowns
+  const handleDropdownLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    (e.currentTarget as HTMLElement).blur();
+    closeMobile();
+  };
 
   return (
     <header className="navbar">
@@ -52,6 +62,33 @@ export default function Navbar() {
             </Link>
           ))}
 
+          {/* New Assessments Dropdown */}
+          <div className="nav-dropdown">
+            <button
+              type="button"
+              className="nav-link nav-dropdown-trigger"
+              data-active={assessmentLinks.some((link) => isActive(link.href))}
+              aria-haspopup="true"
+            >
+              Tools
+              <span className="nav-dropdown-chevron" aria-hidden="true" />
+            </button>
+
+            <div className="nav-dropdown-menu">
+              {assessmentLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="nav-dropdown-link"
+                  data-active={isActive(link.href)}
+                  onClick={handleDropdownLinkClick}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
           <div className="nav-dropdown">
             <button
               type="button"
@@ -70,6 +107,7 @@ export default function Navbar() {
                   href={link.href}
                   className="nav-dropdown-link"
                   data-active={isActive(link.href)}
+                  onClick={handleDropdownLinkClick}
                 >
                   {link.label}
                 </Link>
@@ -107,6 +145,21 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+
+            <div className="nav-mobile-group-label">Assessments</div>
+
+            <div className="nav-mobile-subgroup">
+              {assessmentLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="nav-mobile-link"
+                  onClick={closeMobile}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
 
             <div className="nav-mobile-group-label">Resources</div>
 

@@ -1,5 +1,8 @@
 import RetreatsClient from "../../components/retreats/RetreatsClient";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type Retreat = {
   id: string;
   title: string;
@@ -28,8 +31,16 @@ type Retreat = {
 };
 
 async function getRetreats(): Promise<Retreat[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/retreats`, { cache: "no-store" });
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://spadosphere.com";
+  
+  const res = await fetch(`${baseUrl}/api/retreats`, {
+    cache: "no-store",
+    headers: {
+      "Pragma": "no-cache",
+      "Cache-Control": "no-cache",
+    },
+  });
+
   if (!res.ok) return [];
   const data = await res.json();
   return data.items ?? [];

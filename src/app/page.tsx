@@ -2,6 +2,24 @@
 import Link from "next/link";
 import BrevoChatWidget from "@/components/BrevoChatWidget";
 
+export const metadata = {
+  title: 'Spadosphere | Strategy, Product & Design',
+  openGraph: {
+    title: 'Your Social Media Title Here',
+    type: 'website',
+    url: 'https://spadosphere.com/',
+    images: [
+      {
+        url: 'https://spadosphere.com/Spadosphere.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Spadosphere homepage preview image',
+      },
+    ],
+  },
+}
+
+
 export default function HomePage() {
   return (
     <div>

@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
+// Ensure Next.js does not statically cache or pre-render this API route at build time
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   const today = new Date();
   const todayStr = today.toISOString().split("T")[0];
