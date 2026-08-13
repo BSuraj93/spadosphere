@@ -1,8 +1,5 @@
 import RetreatsClient from "../../components/retreats/RetreatsClient";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 type Retreat = {
   id: string;
   title: string;
@@ -31,28 +28,19 @@ type Retreat = {
 };
 
 async function getRetreats(): Promise<Retreat[]> {
+  // Cleanly handle site URL and strip any trailing slashes
   const rawBaseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://spadosphere.com";
-  // Strip any trailing slash safely (e.g., https://spadosphere.com/ -> https://spadosphere.com)
   const baseUrl = rawBaseUrl.replace(/\/+$/, "");
 
   try {
-    const res = await fetch(`${baseUrl}/api/retreats`, {
-      cache: "no-store",
-      headers: {
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache",
-      },
+    const res = await fetch(`${baseUrl}/api/retreats`, { 
+      cache: "no-store" 
     });
 
-    if (!res.ok) {
-      console.error(`[getRetreats] HTTP Error Status: ${res.status}`);
-      return [];
-    }
-
+    if (!res.ok) return [];
     const data = await res.json();
     return data.items ?? [];
   } catch (err) {
-    console.error("[getRetreats] Fetch failed:", err);
     return [];
   }
 }
