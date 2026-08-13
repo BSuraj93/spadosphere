@@ -28,21 +28,11 @@ type Retreat = {
 };
 
 async function getRetreats(): Promise<Retreat[]> {
-  // Cleanly handle site URL and strip any trailing slashes
-  const rawBaseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://spadosphere.com";
-  const baseUrl = rawBaseUrl.replace(/\/+$/, "");
-
-  try {
-    const res = await fetch(`${baseUrl}/api/retreats`, { 
-      cache: "no-store" 
-    });
-
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.items ?? [];
-  } catch (err) {
-    return [];
-  }
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const res = await fetch(`${baseUrl}/api/retreats`, { cache: "no-store" });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.items ?? [];
 }
 
 export default async function RetreatsPage() {
