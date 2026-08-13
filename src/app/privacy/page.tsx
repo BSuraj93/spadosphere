@@ -79,36 +79,48 @@ export default function PrivacyPage() {
 
                 <div className="legal-subsection">
                   <h3>Voluntarily Provided Information</h3>
-                  <p>
-                    We do not explicitly prompt you to create an account or
-                    input personal data on our Website. However, if you choose
-                    to contact us directly via email (e.g., at{" "}
-                    <a
-                      href="mailto:hello@spadosphere.com"
-                      className="link-text"
-                    >
-                      hello@spadosphere.com
-                    </a>
-                    ), we will receive:
-                  </p>
+<p>
+  We may collect personal information that you voluntarily submit
+  through forms on our Website, including our retreats registration
+  form, or when you contact us directly via email (e.g., at{" "}
+  <a
+    href="mailto:hello@spadosphere.com"
+    className="link-text"
+  >
+    hello@spadosphere.com
+  </a>
+  ).
+</p>
 
-                  <div className="legal-list">
-                    <div className="legal-list-item">
-                      <span className="legal-bullet" />
-                      <p>Your email address.</p>
-                    </div>
-                    <div className="legal-list-item">
-                      <span className="legal-bullet" />
-                      <p>Your name (if provided).</p>
-                    </div>
-                    <div className="legal-list-item">
-                      <span className="legal-bullet" />
-                      <p>
-                        Any other personal information you voluntarily choose to
-                        include in the subject line or body of your email.
-                      </p>
-                    </div>
-                  </div>
+<div className="legal-list">
+  <div className="legal-list-item">
+    <span className="legal-bullet" />
+    <p>First name and last name.</p>
+  </div>
+  <div className="legal-list-item">
+    <span className="legal-bullet" />
+    <p>Email address.</p>
+  </div>
+  <div className="legal-list-item">
+    <span className="legal-bullet" />
+    <p>Phone number.</p>
+  </div>
+  <div className="legal-list-item">
+    <span className="legal-bullet" />
+    <p>Last 6 digits of Aadhar number. <i>We collect this info to ensure the identity of the individual as all our retreats are safe spaces.</i></p>
+  </div>
+  <div className="legal-list-item">
+    <span className="legal-bullet" />
+    <p>Whether pickup assistance is needed.</p>
+  </div>
+  <div className="legal-list-item">
+    <span className="legal-bullet" />
+    <p>
+      Any other information you voluntarily choose to include in your
+      communication or registration submission.
+    </p>
+  </div>
+</div>
                 </div>
 
                 <div className="legal-subsection">
@@ -169,6 +181,14 @@ export default function PrivacyPage() {
                       your inquiry.
                     </p>
                   </div>
+                  <div className="legal-list-item">
+  <span className="legal-bullet" />
+  <p>
+    Process retreat registrations, coordinate logistics, and communicate
+    operational details related to your retreat participation, including
+    pickup requirements where applicable.
+  </p>
+</div>
                 </div>
               </section>
 

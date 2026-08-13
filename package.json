@@ -5,16 +5,27 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:cf": "npx @opennextjs/cloudflare build",
+    "preview:cf": "npx @opennextjs/cloudflare build && npx @opennextjs/cloudflare preview",
+    "deploy:cf": "npx @opennextjs/cloudflare build && npx @opennextjs/cloudflare deploy",
+    "upload:cf": "npx @opennextjs/cloudflare build && npx @opennextjs/cloudflare upload",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.2.9",
+    "@supabase/ssr": "^0.12.0",
+    "@supabase/supabase-js": "^2.110.2",
+    "@tiptap/extension-link": "^3.28.0",
+    "@tiptap/react": "^3.28.0",
+    "@tiptap/starter-kit": "^3.28.0",
+    "googleapis": "^173.0.0",
+    "next": "^16.2.11",
     "postcss": "^8.5.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.1",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -23,6 +34,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4.1.18",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.112.0"
   }
 }
