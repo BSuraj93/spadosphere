@@ -31,19 +31,32 @@ type Retreat = {
 };
 
 async function getRetreats(): Promise<Retreat[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://spadosphere.com";
+  // Get raw site URL or fallback
+  const rawBaseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://spadosphere.com";
   
-  const res = await fetch(`${baseUrl}/api/retreats`, {
-    cache: "no-store",
-    headers: {
-      "Pragma": "no-cache",
-      "Cache-Control": "no-cache",
-    },
-  });
+  // Safely strip any trailing slashes to prevent double-slash redirects (e.g. //api/retreats)
+  const baseUrl = rawBaseUrl.replace(/\/+$/, "");
 
-  if (!res.ok) return [];
-  const data = await res.json();
-  return data.items ?? [];
+  try {
+    const res = await fetch(`${baseUrl}/api/retreats`, {
+      cache: "no-store",
+      headers: {
+        "Pragma": "no-cache",
+        "Cache-Control": "no-cache",
+      },
+    });
+
+    if (!res.ok) {
+      console.error(`[getRetreats] Server fetch failed with status: ${res.status}`);
+      return [];
+    }
+
+    const data = await res.json();
+    return data.items ?? [];
+  } catch (err) {
+    console.error("[getRetreats] Network/Fetch error during server render:", err);
+    return [];
+  }
 }
 
 export default async function RetreatsPage() {
