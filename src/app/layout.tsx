@@ -14,9 +14,9 @@ const quicksand = Quicksand({
 });
 
 export const metadata: Metadata = {
-  title: "Spadosphere | Strategy & Product Design for Early-Stage Startups",
+  title: "Spadosphere | Strategy, Product and Design",
   description:
-    "Spadosphere is a premium consulting boutique for very early to early-stage startups, combining Strategy and Product Design to build Minimum Lovable Products.",
+    "Spadosphere is a Strategy, Product and Design focused atmosphere for anyone who loves to build or do anything they love.",
 };
 
 export default function RootLayout({

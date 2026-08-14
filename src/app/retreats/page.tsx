@@ -1,4 +1,5 @@
 import RetreatsClient from "../../components/retreats/RetreatsClient";
+import { createClient } from "@supabase/supabase-js";
 
 type Retreat = {
   id: string;
@@ -28,11 +29,27 @@ type Retreat = {
 };
 
 async function getRetreats(): Promise<Retreat[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/retreats`, { cache: "no-store" });
-  if (!res.ok) return [];
-  const data = await res.json();
-  return data.items ?? [];
+  try {
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
+    
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    
+    const { data, error } = await supabase
+      .from("retreats")
+      .select("*")
+      .eq("status", "Live");
+
+    if (error) {
+      console.error("Error fetching retreats:", error);
+      return [];
+    }
+
+    return (data as Retreat[]) ?? [];
+  } catch (e) {
+    console.error("Failed to load retreats:", e);
+    return [];
+  }
 }
 
 export default async function RetreatsPage() {
