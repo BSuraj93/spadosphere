@@ -4807,3 +4807,203 @@ p {
   width: 100%;
   justify-content: center;
 }
+
+/* ==========================================================================
+   Services Section Scaffolding
+   ========================================================================== */
+
+.section-header-compact {
+  margin-bottom: 2rem;
+  max-width: 680px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Updated to use primary brand blue / subtle section label style */
+.service-tag {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--primary, #FF6B6B); /* Swapped out the coral hex for Spadosphere's primary blue */
+  opacity: 0.7; /* Subtly mutes the tag so it doesn't clash with card titles */
+  margin-bottom: 0.75rem;
+}
+
+.service-card h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.service-card p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.service-card-action {
+  margin-top: auto;
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Preserve footer card sizing while accommodating the 4th column */
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+@media (min-width: 900px) {
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 320px 1fr; /* Retains original fixed width for brand block */
+    gap: 3rem;
+    align-items: start;
+  }
+}
+
+.footer-brand-block {
+  width: 100%;
+  max-width: 320px; /* Locks brand block dimensions to original spec */
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat( auto-fit, minmax(130px, 1fr) );
+  gap: 1.5rem;
+}
+
+/* Ensure anchor scroll links land below the fixed navbar height */
+section[id] {
+  scroll-margin-top: 5rem; /* Adjust value based on your navbar height */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Apply scroll margin explicitly to the target element */
+#framework {
+  scroll-margin-top: 100px !important;
+}
+
+/* Ensure html and body permit default window scroll snapping */
+html, body {
+  scroll-behavior: smooth;
+  overflow-x: clip; /* Avoid 'overflow: hidden' on html/body as it breaks CSS scroll-margin */
+}
+
+/* ==========================================================================
+   Careers Page & Accordion Components
+   ========================================================================== */
+
+.job-card {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.job-header-collapsed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.job-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-muted, #64748b);
+  font-weight: 500;
+}
+
+.job-meta-badge {
+  background: rgba(99, 102, 241, 0.08);
+  color: #4f46e5;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.job-expanded-content {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+}
+
+.job-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.25rem;
+  background: rgba(0, 0, 0, 0.025);
+  padding: 1.25rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.job-detail-item h5 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #64748b);
+}
+
+.job-detail-item p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: inherit;
+}
+
+.job-section-block {
+  margin-bottom: 1.5rem;
+}
+
+.job-section-block h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.job-section-block ul {
+  padding-left: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+.job-section-block li {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.empty-jobs-card {
+  text-align: center;
+  padding: 3.5rem 2rem;
+}
