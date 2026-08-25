@@ -1,4 +1,3 @@
-// src/components/Footer.tsx
 import Link from "next/link";
 
 export default function Footer() {
@@ -29,6 +28,9 @@ export default function Footer() {
             <Link href="/about" className="footer-link">
               About
             </Link>
+            <Link href="/careers" className="footer-link">
+              Careers
+            </Link>
             <Link href="/retreats" className="footer-link">
               Explore Retreats
             </Link>
@@ -37,6 +39,16 @@ export default function Footer() {
             </Link>
             <Link href="/contact" className="footer-link">
               Contact Us
+            </Link>
+          </div>
+
+          <div>
+            <div className="footer-column-title">Solutions</div>
+            <Link href="/services/ai-governance" className="footer-link">
+              AI Governance & Training
+            </Link>
+            <Link href="/services/dpdpa-governance" className="footer-link">
+              DPDPA Governance & Training
             </Link>
           </div>
 
@@ -85,7 +97,7 @@ export default function Footer() {
 
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Spadosphere India Private Limited</span>
-        <span>Atmosphere for early-stage founders</span>
+        <span>A Breathable Atmosphere for giving life to your ideas.</span>
       </div>
     </footer>
   );

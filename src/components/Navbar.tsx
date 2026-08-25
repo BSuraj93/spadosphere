@@ -1,4 +1,3 @@
-// src/components/Navbar.tsx
 "use client";
 
 import Link from "next/link";
@@ -10,6 +9,11 @@ const navLinks = [
   { href: "/method", label: "Methodology" },
   { href: "/about", label: "About" },
   { href: "/retreats", label: "Explore Retreats" },
+];
+
+const solutionLinks = [
+  { href: "/services/ai-governance", label: "AI Governance & Training" },
+  { href: "/services/dpdpa-governance", label: "DPDPA Governance & Training" },
 ];
 
 const resourceLinks = [
@@ -26,7 +30,13 @@ export default function Navbar() {
     return pathname?.startsWith(href);
   };
 
-  const closeMobile = () => setOpen(false);
+  const closeMobile = () => {
+    setOpen(false);
+    // Blur active element to close hover/focus dropdown state on desktop
+    if (typeof document !== "undefined" && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  };
 
   return (
     <header className="navbar">
@@ -52,6 +62,34 @@ export default function Navbar() {
             </Link>
           ))}
 
+          {/* Solutions Dropdown */}
+          <div className="nav-dropdown">
+            <button
+              type="button"
+              className="nav-link nav-dropdown-trigger"
+              data-active={solutionLinks.some((link) => isActive(link.href))}
+              aria-haspopup="true"
+            >
+              Solutions
+              <span className="nav-dropdown-chevron" aria-hidden="true" />
+            </button>
+
+            <div className="nav-dropdown-menu">
+              {solutionLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="nav-dropdown-link"
+                  data-active={isActive(link.href)}
+                  onClick={closeMobile}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Resources Dropdown */}
           <div className="nav-dropdown">
             <button
               type="button"
@@ -70,6 +108,7 @@ export default function Navbar() {
                   href={link.href}
                   className="nav-dropdown-link"
                   data-active={isActive(link.href)}
+                  onClick={closeMobile}
                 >
                   {link.label}
                 </Link>
@@ -77,7 +116,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          <Link href="/contact" className="nav-cta btn btn-primary">
+          <Link href="/contact" className="nav-cta btn btn-primary" onClick={closeMobile}>
             Contact Us
           </Link>
         </nav>
@@ -107,6 +146,21 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+
+            <div className="nav-mobile-group-label">Solutions</div>
+
+            <div className="nav-mobile-subgroup">
+              {solutionLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="nav-mobile-link"
+                  onClick={closeMobile}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
 
             <div className="nav-mobile-group-label">Resources</div>
 
